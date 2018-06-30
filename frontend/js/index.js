@@ -1,9 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Hello from './components/Hello.js';
+import { Provider } from "react-redux";
+import Kanban from './components/Kanban.js';
+import { store } from "./store";
 
-const element = <Hello />;
-ReactDOM.render(
-  element,
-  document.getElementById('root')
+const app = (
+  <Provider store={store}>
+    <Kanban />
+  </Provider>
 );
+
+ReactDOM.render(app, document.getElementById('root'));
