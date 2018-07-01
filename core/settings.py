@@ -29,7 +29,7 @@ SECRET_KEY = os.getenv('KHANBAN_SECRET_KEY', 'y*d6txl=td)a8n%_@6w@)%=*b_*cscxw)0
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -132,6 +132,4 @@ STATIC_URL = '/static/'
 # Development overrides
 
 if ENV == 'local':
-    ALLOWED_HOSTS = ['*']
-
     DEBUG = True
