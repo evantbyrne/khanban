@@ -84,8 +84,11 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
+DATABASES_DEFAULT = dj_database_url.config(conn_max_age=600, default='postgres://postgres:postgres@db:5432')
+DATABASES_DEFAULT['NAME'] = 'postgres'
+
 DATABASES = {
-    'default': dj_database_url.config(conn_max_age=600, default='postgres://postgres:postgres@db:5432'),
+    'default': DATABASES_DEFAULT,
 }
 
 
