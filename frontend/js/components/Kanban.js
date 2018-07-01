@@ -1,41 +1,26 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { ticketAdd } from '../actions/kanbanActions';
+import KanbanColumn from './KanbanColumn';
 
 const StyleContainer = {
   display: 'flex',
-  flexDirection: 'column',
-  maxWidth: 300,
-};
-
-const StyleTicket = {
-  border: '1px solid #333',
-  borderRadius: 5,
-  marginBottom: 5,
-  padding: 3,
+  flexDirection: 'row',
+  height: 'calc(100vh - 42px)',
 };
 
 class Kanban extends React.Component {
-  onTicketAdd(event) {
-    event.preventDefault();
-    this.props.ticketAdd();
-  }
-
   render() {
-    const onTicketAdd = this.onTicketAdd.bind(this);
-
     return (
-      <div>
-        <button onClick={onTicketAdd}>Add Ticket</button>
-        <div style={StyleContainer}>
-          {
-            this.props.tickets.map((ticket, index) => (
-              <div key={`ticket_${index}`} style={StyleTicket}>
-                {ticket.title}
-              </div>
-            ))
-          }
-        </div>
+      <div style={StyleContainer}>
+        {
+          this.props.columns.map((column, index) => (
+            <KanbanColumn
+              column={column}
+              index={index}
+              key={`kanban_column_${index}`} />
+          ))
+        }
       </div>
     );
   }
@@ -43,14 +28,12 @@ class Kanban extends React.Component {
 
 function mapStateToProps(state, ownProps) {
   return {
-    tickets: state.kanban.tickets,
+    columns: state.kanban.columns,
   };
 }
 
 function mapDispatchToProps(dispatch) {
-  return {
-    ticketAdd: () => dispatch(ticketAdd()),
-  };
+  return {};
 }
 
 export default connect(

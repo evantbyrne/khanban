@@ -1,10 +1,31 @@
 const initialState = {
-  tickets: [
+  columns: [
     {
-      title: 'Hello, World!',
+      title: 'To Do',
+      tickets: [
+        {
+          title: 'Hello, World!',
+        },
+        {
+          title: 'Lorem Ipsum Ticket',
+        },
+      ],
     },
     {
-      title: 'Lorem Ipsum Ticket',
+      title: 'In Progress',
+      tickets: [
+        {
+          title: 'This ticket is in progress right now',
+        },
+      ],
+    },
+    {
+      title: 'Done',
+      tickets: [
+        {
+          title: 'Plan Sprint 1',
+        },
+      ],
     },
   ],
 };
