@@ -2,6 +2,8 @@
 
 FROM python:3
 
+ENV KHANBAN_ENV local
+
 ENV PYTHONUNBUFFERED 1
 
 RUN mkdir /code
