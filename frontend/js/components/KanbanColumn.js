@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 const StyleContainer = {
   borderRight: '2px solid black',
   position: 'relative',
-  width: 300,
+  minWidth: 300,
 };
 
 const StyleHeader = {

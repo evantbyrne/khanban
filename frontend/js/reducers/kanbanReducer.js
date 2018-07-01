@@ -28,6 +28,21 @@ const initialState = {
       ],
     },
   ],
+  current_card: {
+    description: 'The quick brown fox jumps over the lazy dog.',
+    id: 1,
+    tags: [
+      {
+        color: 'darkblue',
+        title: 'Foobar',
+      },
+      {
+        color: 'darkgreen',
+        title: 'Baz',
+      },
+    ],
+    title: 'Hello, World!',
+  },
 };
 
 export default function kanbanReducer(state = initialState, action) {
