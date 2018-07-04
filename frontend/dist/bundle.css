@@ -13,9 +13,10 @@
   overflow-y: auto; }
   .CardDetail_button {
     appearance: none;
-    background: white;
+    background: black;
     border: 1px solid black;
     border-radius: 3px;
+    color: white;
     display: block;
     font-size: 16px;
     margin: 20px 60px 10px;
@@ -29,6 +30,17 @@
   .CardDetail_description {
     border-bottom: 1px solid black;
     padding: 20px; }
+  .CardDetail_field {
+    border: 0;
+    border-bottom: 2px dashed black;
+    display: block;
+    font-size: 24px;
+    margin: 10px;
+    padding: 20px 20px 19px 20px;
+    width: calc(100% - 20px); }
+    .CardDetail_field.-text {
+      font-size: 16px;
+      height: 300px; }
   .CardDetail_tags {
     border-bottom: 1px solid black;
     display: flex;
