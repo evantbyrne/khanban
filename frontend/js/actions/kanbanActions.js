@@ -1,12 +1,7 @@
-export function ticketAdd() {
+export function cardDetail(column_index, card_index) {
   return {
-    type: 'TICKET_ADD',
-  };
-};
-
-export function ticketSetTitle(value) {
-  return {
-    type: 'TICKET_SET_TITLE',
-    value,
+    card_index,
+    column_index,
+    type: 'CARD_DETAIL',
   };
 };

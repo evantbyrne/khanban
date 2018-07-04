@@ -37,6 +37,7 @@ const StyleContainer = {
   borderTop: '2px solid black',
   height: '100%',
   marginLeft: 'auto',
+  maxWidth: 500,
   minWidth: 500,
   overflowY: 'auto',
 };
@@ -61,28 +62,34 @@ const StyleTitle = {
 
 class CardDetail extends React.Component {
   render() {
-    if (this.props.card === null) {
+    const { card } = this.props;
+
+    if (card === null) {
       return null;
     }
 
     return (
       <div style={StyleContainer}>
         <div style={StyleTitle}>
-          #{this.props.card.id} {this.props.card.title}
+          #{card.id} {card.title}
         </div>
-        <div style={StyleDescription}>
-          {this.props.card.description}
-        </div>
-        <div style={StyleTags}>
-          {
-            this.props.card.tags.map((tag, index) => (
-              <Tag
-                index={index}
-                key={`tag_${index}`}
-                tag={tag} />
-            ))
-          }
-        </div>
+        {card.description && (
+          <div style={StyleDescription}>
+            {this.props.card.description}
+          </div>
+        )}
+        {card.tags.length > 0 && (
+          <div style={StyleTags}>
+            {
+              card.tags.map((tag, index) => (
+                <Tag
+                  index={index}
+                  key={`tag_${index}`}
+                  tag={tag} />
+              ))
+            }
+          </div>
+        )}
         <button style={StyleButton}>Edit Card</button>
         <button style={StyleButtonSecondary}>Archive Card</button>
       </div>

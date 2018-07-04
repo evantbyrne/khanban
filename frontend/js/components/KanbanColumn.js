@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { cardDetail } from '../actions/kanbanActions';
 
 const StyleContainer = {
   borderRight: '2px solid black',
@@ -30,14 +31,20 @@ const StyleTicketContainer = {
 
 class KanbanColumn extends React.Component {
   render() {
+    const onCardDetail = this.props.onCardDetail.bind(this);
+    const column_index = this.props.index;
+
     return (
       <div style={StyleContainer}>
         <div style={StyleHeader}>{this.props.column.title}</div>
         <div style={StyleTicketContainer}>
           {
-            this.props.column.tickets.map((ticket, index) => (
-              <div key={`kanban_ticket_${index}`} style={StyleTicket}>
-                {ticket.title}
+            this.props.column.tickets.map((ticket, card_index) => (
+              <div
+                onClick={(e) => onCardDetail(e, column_index, card_index)}
+                key={`kanban_ticket_${card_index}`}
+                style={StyleTicket}>
+                #{ticket.id} <a href="#">{ticket.title}</a>
               </div>
             ))
           }
@@ -55,7 +62,12 @@ function mapStateToProps(state, ownProps) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return {};
+  return {
+    onCardDetail: (event, column_index, card_index) => {
+      event.preventDefault();
+      dispatch(cardDetail(column_index, card_index));
+    },
+  };
 }
 
 export default connect(

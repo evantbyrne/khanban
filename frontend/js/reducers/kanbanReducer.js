@@ -4,9 +4,24 @@ const initialState = {
       title: 'To Do',
       tickets: [
         {
+          description: 'The quick brown fox jumps over the lazy dog.',
+          id: 1,
+          tags: [
+            {
+              color: 'darkblue',
+              title: 'Foobar',
+            },
+            {
+              color: 'darkgreen',
+              title: 'Baz',
+            },
+          ],
           title: 'Hello, World!',
         },
         {
+          description: 'Second ticket description.',
+          id: 2,
+          tags: [],
           title: 'Lorem Ipsum Ticket',
         },
       ],
@@ -15,7 +30,10 @@ const initialState = {
       title: 'In Progress',
       tickets: [
         {
-          title: 'This ticket is in progress right now',
+          description: '',
+          id: 3,
+          tags: [],
+          title: 'This ticket is in progress right now and has a long title',
         },
       ],
     },
@@ -23,48 +41,24 @@ const initialState = {
       title: 'Done',
       tickets: [
         {
+          description: '',
+          id: 4,
+          tags: [],
           title: 'Plan Sprint 1',
         },
       ],
     },
   ],
-  current_card: {
-    description: 'The quick brown fox jumps over the lazy dog.',
-    id: 1,
-    tags: [
-      {
-        color: 'darkblue',
-        title: 'Foobar',
-      },
-      {
-        color: 'darkgreen',
-        title: 'Baz',
-      },
-    ],
-    title: 'Hello, World!',
-  },
+  current_card: null,
 };
 
 export default function kanbanReducer(state = initialState, action) {
   switch (action.type) {
-    case 'TICKET_ADD':
+    case 'CARD_DETAIL':
       return (() => {
-        const tickets = state.tickets.concat([
-          {
-            title: '',
-          }
-        ]);
+        const current_card = state.columns[action.column_index].tickets[action.card_index];
         return Object.assign({}, state, {
-          tickets,
-        });
-      })();
-
-    case 'TICKET_SET_TITLE':
-      return (() => {
-        const tickets = state.tickets.slice();
-        tickets[action.index].title = action.value;
-        return Object.assign({}, state, {
-          tickets,
+          current_card,
         });
       })();
   }
