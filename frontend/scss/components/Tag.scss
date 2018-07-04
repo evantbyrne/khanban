@@ -1,0 +1,14 @@
+.Tag {
+  display: flex;
+  flex-direction: row;
+  margin-right: 10px;
+
+  &_circle {
+    border-radius: 3px;
+    display: block;
+    height: 12px;
+    margin-right: 5px;
+    transform: translateY(3px);
+    width: 12px;
+  }
+}

@@ -1,0 +1,46 @@
+.CardDetail {
+  border-left: 3px solid black;
+  border-top: 2px solid black;
+  height: calc(100vh - 42px);
+  margin-left: auto;
+  max-width: 500px;
+  min-width: 500px;
+  overflow-y: auto;
+
+  &_button {
+    appearance: none;
+    background: white;
+    border: 1px solid black;
+    border-radius: 3px;
+    display: block;
+    font-size: 16px;
+    margin: 20px 60px 10px;
+    padding: 12px;
+    cursor: pointer;
+    text-align: center;
+    width: calc(100% - 120px);
+
+    &.-secondary {
+      background: white;
+      color: black;
+    }
+  }
+
+  &_description {
+    border-bottom: 1px solid black;
+    padding: 20px;
+  }
+
+  &_tags {
+    border-bottom: 1px solid black;
+    display: flex;
+    flex-direction: row;
+    padding: 20px;
+  }
+
+  &_title {
+    border-bottom: 1px solid black;
+    font-size: 24px;
+    padding: 20px;
+  }
+}

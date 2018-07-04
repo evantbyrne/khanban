@@ -1,0 +1,26 @@
+.KanbanColumn {
+  border-right: 2px solid black;
+  position: relative;
+  min-width: 300px;
+
+  &_container {
+    bottom: 0;
+    left: 0;
+    overflow-y: auto;
+    padding: 20px;
+    position: absolute;
+    right: 0;
+    top: 40px;
+  }
+
+  &_header {
+    border-bottom: 1px solid black;
+    padding: 10px 20px;
+  }
+
+  &_ticket {
+    border: 1px solid black;
+    margin-bottom: 10px;
+    padding: 10px;
+  }
+}

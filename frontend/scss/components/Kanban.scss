@@ -1,0 +1,12 @@
+.Kanban {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  overflow-x: auto;
+
+  &_container {
+    display: flex;
+    flex-direction: row;
+    height: calc(100vh - 42px);
+  }
+}
