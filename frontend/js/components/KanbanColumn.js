@@ -12,12 +12,12 @@ class KanbanColumn extends React.Component {
         <div className="KanbanColumn_header">{this.props.column.title}</div>
         <div className="KanbanColumn_container">
           {
-            this.props.column.tickets.map((ticket, card_index) => (
+            this.props.column.cards.map((card, card_index) => (
               <div
                 className="KanbanColumn_ticket"
                 onClick={(e) => onCardDetail(e, column_index, card_index)}
-                key={`kanban_ticket_${card_index}`}>
-                #{ticket.id} <a href="#">{ticket.title}</a>
+                key={`kanban_card_${card_index}`}>
+                #{card.id} <a href="#">{card.title}</a>
               </div>
             ))
           }

@@ -1,64 +1,41 @@
 const initialState = {
-  columns: [
-    {
-      title: 'To Do',
-      tickets: [
-        {
-          description: 'The quick brown fox jumps over the lazy dog.',
-          id: 1,
-          tags: [
-            {
-              color: 'darkblue',
-              title: 'Foobar',
-            },
-            {
-              color: 'darkgreen',
-              title: 'Baz',
-            },
-          ],
-          title: 'Hello, World!',
-        },
-        {
-          description: 'Second ticket description.',
-          id: 2,
-          tags: [],
-          title: 'Lorem Ipsum Ticket',
-        },
-      ],
-    },
-    {
-      title: 'In Progress',
-      tickets: [
-        {
-          description: '',
-          id: 3,
-          tags: [],
-          title: 'This ticket is in progress right now and has a long title',
-        },
-      ],
-    },
-    {
-      title: 'Done',
-      tickets: [
-        {
-          description: '',
-          id: 4,
-          tags: [],
-          title: 'Plan Sprint 1',
-        },
-      ],
-    },
-  ],
   current_card: null,
+  id: 1,
+  is_loading: true,
+  kanban_columns: []
 };
 
 export default function kanbanReducer(state = initialState, action) {
   switch (action.type) {
     case 'CARD_DETAIL':
       return (() => {
-        const current_card = state.columns[action.column_index].tickets[action.card_index];
+        const current_card = state.kanban_columns[action.column_index].cards[action.card_index];
         return Object.assign({}, state, {
-          current_card,
+          current_card
+        });
+      })();
+
+    case "LOAD_KANBAN_BEGIN":
+      return (function() {
+        return Object.assign({}, state, {
+          is_loading: true
+        });
+      })();
+
+    case "LOAD_KANBAN_ERROR":
+      return (function() {
+        console.log("ERROR", action.error);
+        return Object.assign({}, state, {
+          error: action.error,
+          is_loading: false
+        });
+      })();
+
+    case "LOAD_KANBAN_SUCCESS":
+      return (function() {
+        return Object.assign({}, state, {
+          is_loading: false,
+          kanban_columns: action.json.kanban_columns
         });
       })();
   }

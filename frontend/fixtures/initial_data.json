@@ -1,0 +1,56 @@
+[
+  {
+    "model": "frontend.project",
+    "pk": 1,
+    "fields": {
+      "slug": "khanban",
+      "title": "Khanban"
+    }
+  },
+  {
+    "model": "frontend.kanbancolumn",
+    "pk": 1,
+    "fields": {
+      "order": 1,
+      "project_id": 1,
+      "title": "To Do"
+    }
+  },
+  {
+    "model": "frontend.kanbancolumn",
+    "pk": 2,
+    "fields": {
+      "order": 2,
+      "project_id": 1,
+      "title": "In Progress"
+    }
+  },
+  {
+    "model": "frontend.kanbancolumn",
+    "pk": 3,
+    "fields": {
+      "order": 3,
+      "project_id": 1,
+      "title": "QA"
+    }
+  },
+  {
+    "model": "frontend.kanbancolumn",
+    "pk": 4,
+    "fields": {
+      "order": 4,
+      "project_id": 1,
+      "title": "Accepted"
+    }
+  },
+  {
+    "model": "frontend.card",
+    "pk": 1,
+    "fields": {
+      "description": "The quick brown fox jumps over the lazy dog.",
+      "kanban_column_id": 1,
+      "kanban_column_order": 1,
+      "title": "Hello, World"
+    }
+  }
+]

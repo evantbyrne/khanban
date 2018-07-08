@@ -78,7 +78,7 @@ class CardDetail extends React.Component {
             placeholder="Description..."
             value={this.state.description} />
         )}
-        {card.tags.length > 0 && (
+        {card.tags && card.tags.length > 0 && (
           <div className="CardDetail_tags">
             {
               card.tags.map((tag, index) => (

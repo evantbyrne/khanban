@@ -15,6 +15,9 @@ class Card(models.Model):
     kanban_column_order = models.PositiveIntegerField(blank=True, default=0)
     title = models.CharField(max_length=255)
 
+    class Meta:
+        ordering = ['kanban_column_order']
+
 
 class KanbanColumn(models.Model):
     order = models.PositiveIntegerField()
@@ -25,6 +28,9 @@ class KanbanColumn(models.Model):
         related_query_name='kanban_column',
     )
     title = models.CharField(max_length=255)
+
+    class Meta:
+        ordering = ['order']
 
 
 class Project(models.Model):
