@@ -42,6 +42,7 @@ function mapDispatchToProps(dispatch) {
     load: function(id) {
       dispatch(
         load(
+          'get',
           `/api/kanbans/${id}.json`,
           "LOAD_KANBAN_BEGIN",
           "LOAD_KANBAN_SUCCESS",

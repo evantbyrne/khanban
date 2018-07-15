@@ -1,7 +1,9 @@
 const initialState = {
   current_card: null,
+  error: null,
   id: 1,
   is_loading: true,
+  is_detail_saving: false,
   kanban_columns: []
 };
 
@@ -12,6 +14,40 @@ export default function kanbanReducer(state = initialState, action) {
         const current_card = state.kanban_columns[action.column_index].cards[action.card_index];
         return Object.assign({}, state, {
           current_card
+        });
+      })();
+
+    case "CARD_UPDATE_BEGIN":
+      return (function() {
+        return Object.assign({}, state, {
+          is_detail_saving: true
+        });
+      })();
+
+    case "CARD_UPDATE_ERROR":
+      return (function() {
+        console.log("ERROR", action.error);
+        return Object.assign({}, state, {
+          error: action.error,
+          is_detail_saving: false
+        });
+      })();
+
+    case "CARD_UPDATE_SUCCESS":
+      return (function() {
+        const kanban_columns = state.kanban_columns.map((column) => {
+          return Object.assign({}, column, {
+            cards: column.cards.map((card) => {
+              if (card.id == action.json.id) {
+                return action.json;
+              }
+              return card;
+            })
+          });
+        });
+        return Object.assign({}, state, {
+          is_detail_saving: false,
+          kanban_columns
         });
       })();
 

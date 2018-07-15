@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 export function cardDetail(column_index, card_index) {
   return {
     card_index,
@@ -6,14 +8,17 @@ export function cardDetail(column_index, card_index) {
   };
 };
 
-export function load(url, type_begin, type_success, type_error) {
+export function load(method, url, type_begin, type_success, type_error, data = {}) {
+  const params = {
+    data,
+    method,
+    url,
+  };
   return dispatch => {
     dispatch(loadBegin(type_begin));
-    return fetch(url)
-      .then(handleHttpErrors)
-      .then(response => response.json())
-      .then(json => {
-        return dispatch(loadSuccess(type_success, json));
+    return axios(params)
+      .then(response => {
+        return dispatch(loadSuccess(type_success, response.data));
       })
       .catch(error => {
         return dispatch(loadError(type_error, error));
@@ -39,12 +44,4 @@ export function loadError(type, error) {
     type,
     error
   };
-}
-
-// Handle HTTP errors since fetch won't.
-function handleHttpErrors(response) {
-  if (!response.ok) {
-    throw Error(response.statusText);
-  }
-  return response;
 }

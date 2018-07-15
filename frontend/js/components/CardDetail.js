@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { ticketAdd } from '../actions/kanbanActions';
+import { load } from '../actions/kanbanActions';
 import Tag from './Tag';
 
 class CardDetail extends React.Component {
@@ -9,6 +9,7 @@ class CardDetail extends React.Component {
 
     this.onCancel = this.onCancel.bind(this);
     this.onEdit = this.onEdit.bind(this);
+    this.onSave = this.onSave.bind(this);
 
     this.state = {
       is_editing: false,
@@ -45,6 +46,17 @@ class CardDetail extends React.Component {
       is_editing: true,
       title: card.title,
     });
+  }
+
+  onSave(event) {
+    event.preventDefault();
+
+    const { card } = this.props;
+
+    card.description = this.state.description;
+    card.title = this.state.title;
+
+    this.props.onUpdate(card);
   }
 
   render() {
@@ -90,14 +102,17 @@ class CardDetail extends React.Component {
             }
           </div>
         )}
-        {(!this.state.is_editing && (
+        {((!this.state.is_editing || this.props.is_saving) && (
           <React.Fragment>
-            <button className="CardDetail_button" onClick={this.onEdit}>Edit Card</button>
-            <button className="CardDetail_button -secondary">Archive Card</button>
+            <button className="CardDetail_button"
+              disabled={this.props.is_saving}
+              onClick={this.onEdit}>Edit Card</button>
+            <button className="CardDetail_button -secondary"
+              disabled={this.props.is_saving}>Archive Card</button>
           </React.Fragment>
         )) || (
           <React.Fragment>
-            <button className="CardDetail_button">Save</button>
+            <button className="CardDetail_button" onClick={this.onSave}>Save</button>
             <button className="CardDetail_button -secondary" onClick={this.onCancel}>Cancel</button>
           </React.Fragment>
         )}
@@ -109,11 +124,25 @@ class CardDetail extends React.Component {
 function mapStateToProps(state, ownProps) {
   return {
     card: state.kanban.current_card,
+    is_saving: state.kanban.is_detail_saving
   };
 }
 
 function mapDispatchToProps(dispatch) {
-  return {};
+  return {
+    onUpdate: (card) => {
+      dispatch(
+        load(
+          'put',
+          `/api/cards/${card.id}.json`,
+          "CARD_UPDATE_BEGIN",
+          "CARD_UPDATE_SUCCESS",
+          "CARD_UPDATE_ERROR",
+          card
+        )
+      );
+    },
+  };
 }
 
 export default connect(

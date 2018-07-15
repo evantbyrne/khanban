@@ -25,6 +25,12 @@
       background: white;
       color: black;
     }
+
+    &[disabled] {
+      background: gray;
+      color: black;
+      cursor: wait;
+    }
   }
 
   &_description {
