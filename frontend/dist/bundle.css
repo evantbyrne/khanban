@@ -97,6 +97,8 @@
   .KanbanColumn_header {
     border-bottom: 1px solid black;
     padding: 10px 20px; }
+  .KanbanColumn_header-add {
+    float: right; }
   .KanbanColumn_ticket {
     border: 1px solid black;
     margin-bottom: 10px;

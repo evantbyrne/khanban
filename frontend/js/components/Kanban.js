@@ -11,6 +11,7 @@ class Kanban extends React.Component {
   }
 
   render() {
+    const is_editing = (this.props.current_card !== null && this.props.current_card.id === null);
     return (
       <div className="Kanban">
         <div className="Kanban_container">
@@ -23,7 +24,7 @@ class Kanban extends React.Component {
             ))
           }
         </div>
-        <CardDetail />
+        <CardDetail is_editing={is_editing} />
       </div>
     );
   }
@@ -32,6 +33,7 @@ class Kanban extends React.Component {
 function mapStateToProps(state, ownProps) {
   return {
     columns: state.kanban.kanban_columns,
+    current_card: state.kanban.current_card,
     id: state.kanban.id,
     is_loading: state.kanban.is_loading
   };

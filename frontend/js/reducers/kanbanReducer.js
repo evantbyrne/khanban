@@ -9,11 +9,57 @@ const initialState = {
 
 export default function kanbanReducer(state = initialState, action) {
   switch (action.type) {
+    case 'CARD_ADD':
+      return (() => {
+        return Object.assign({}, state, {
+          current_card: {
+            id: null,
+            kanban_column: action.kanban_column
+          }
+        });
+      })();
+
+    case 'CARD_CLOSE':
+      return (() => {
+        return Object.assign({}, state, {
+          current_card: null
+        });
+      })();
+
     case 'CARD_DETAIL':
       return (() => {
         const current_card = state.kanban_columns[action.column_index].cards[action.card_index];
         return Object.assign({}, state, {
           current_card
+        });
+      })();
+
+    case "CARD_CREATE_BEGIN":
+      return (function() {
+        return Object.assign({}, state, {
+          is_detail_saving: true
+        });
+      })();
+
+    case "CARD_CREATE_ERROR":
+      return (function() {
+        console.log("ERROR", action.error);
+        return Object.assign({}, state, {
+          error: action.error,
+          is_detail_saving: false
+        });
+      })();
+
+    case "CARD_CREATE_SUCCESS":
+      return (function() {
+        const kanban_columns = state.kanban_columns.slice();
+        kanban_columns[0].cards = kanban_columns[0].cards.slice();
+        kanban_columns[0].cards.unshift(action.json);
+        kanban_columns[0] = Object.assign({}, kanban_columns[0]);
+        return Object.assign({}, state, {
+          current_card: null,
+          is_detail_saving: false,
+          kanban_columns
         });
       })();
 

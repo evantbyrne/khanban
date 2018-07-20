@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { load } from '../actions/kanbanActions';
+import { cardClose, cardEditing, load } from '../actions/kanbanActions';
 import Tag from './Tag';
 
 class CardDetail extends React.Component {
@@ -12,13 +12,13 @@ class CardDetail extends React.Component {
     this.onSave = this.onSave.bind(this);
 
     this.state = {
-      is_editing: false,
+      is_editing: props.is_editing || false,
     };
   }
 
   componentWillReceiveProps(newProps) {
     this.setState({
-      is_editing: false,
+      is_editing: newProps.is_editing || false,
     });
   }
 
@@ -34,6 +34,10 @@ class CardDetail extends React.Component {
     this.setState({
       is_editing: false,
     });
+
+    if (this.props.card.id === null) {
+      this.props.onClose();
+    }
   }
 
   onEdit(event) {
@@ -56,7 +60,11 @@ class CardDetail extends React.Component {
     card.description = this.state.description;
     card.title = this.state.title;
 
-    this.props.onUpdate(card);
+    if (this.props.card.id === null) {
+      this.props.onCreate(card);
+    } else {
+      this.props.onUpdate(card);
+    }
   }
 
   render() {
@@ -130,6 +138,23 @@ function mapStateToProps(state, ownProps) {
 
 function mapDispatchToProps(dispatch) {
   return {
+    onClose: () => {
+      dispatch(cardClose());
+    },
+
+    onCreate: (card) => {
+      dispatch(
+        load(
+          'post',
+          `/api/cards.json`,
+          "CARD_CREATE_BEGIN",
+          "CARD_CREATE_SUCCESS",
+          "CARD_CREATE_ERROR",
+          card
+        )
+      );
+    },
+
     onUpdate: (card) => {
       dispatch(
         load(

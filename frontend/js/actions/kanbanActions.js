@@ -1,5 +1,18 @@
 import axios from 'axios';
 
+export function cardAdd(kanban_column) {
+  return {
+    kanban_column,
+    type: 'CARD_ADD',
+  };
+};
+
+export function cardClose() {
+  return {
+    type: 'CARD_CLOSE',
+  };
+};
+
 export function cardDetail(column_index, card_index) {
   return {
     card_index,
