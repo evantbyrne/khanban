@@ -52,10 +52,15 @@ export default function kanbanReducer(state = initialState, action) {
 
     case "CARD_CREATE_SUCCESS":
       return (function() {
-        const kanban_columns = state.kanban_columns.slice();
-        kanban_columns[0].cards = kanban_columns[0].cards.slice();
-        kanban_columns[0].cards.unshift(action.json);
-        kanban_columns[0] = Object.assign({}, kanban_columns[0]);
+        const kanban_columns = state.kanban_columns.map((column) => {
+          if (column.id === action.json.kanban_column) {
+            column.cards.unshift(action.json);
+            return Object.assign({}, column, {
+              cards: column.cards.slice()
+            });
+          }
+          return column;
+        });
         return Object.assign({}, state, {
           current_card: null,
           is_detail_saving: false,
