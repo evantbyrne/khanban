@@ -7,6 +7,15 @@ const initialState = {
   kanban_columns: []
 };
 
+// a little function to help us with reordering the result
+const reorder = (list, startIndex, endIndex) => {
+  const result = Array.from(list);
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
+
+  return result;
+};
+
 export default function kanbanReducer(state = initialState, action) {
   switch (action.type) {
     case 'CARD_ADD':
@@ -31,6 +40,27 @@ export default function kanbanReducer(state = initialState, action) {
         const current_card = state.kanban_columns[action.column_index].cards[action.card_index];
         return Object.assign({}, state, {
           current_card
+        });
+      })();
+
+    case 'CARD_ORDER':
+      return (() => {
+        let card = null;
+        const kanban_columns = state.kanban_columns.map((column, column_index) => {
+          // Remove card from old spot.
+          if (column.id === action.source_column_id) {
+            [card] = column.cards.splice(action.source_card_index, 1);
+          }
+          return Object.assign({}, column);
+        }).map((column, column_index) => {
+          // Insert card into new spot.
+          if (card !== null && column.id === action.destination_column_id) {
+            column.cards.splice(action.destination_card_index, 0, card);
+          }
+          return Object.assign({}, column);
+        });
+        return Object.assign({}, state, {
+          kanban_columns
         });
       })();
 

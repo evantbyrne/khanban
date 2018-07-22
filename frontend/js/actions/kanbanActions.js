@@ -21,6 +21,20 @@ export function cardDetail(column_index, card_index) {
   };
 };
 
+export function cardOrder(source, destination) {
+  const destination_column_parts = destination.droppableId.split("kanban_column_");
+  const destination_column_id = parseInt(destination_column_parts[1]);
+  const source_column_parts = source.droppableId.split("kanban_column_");
+  const source_column_id = parseInt(source_column_parts[1]);
+  return {
+    destination_card_index: destination.index,
+    destination_column_id,
+    source_card_index: source.index,
+    source_column_id,
+    type: 'CARD_ORDER',
+  };
+};
+
 export function load(method, url, type_begin, type_success, type_error, data = {}) {
   const params = {
     data,

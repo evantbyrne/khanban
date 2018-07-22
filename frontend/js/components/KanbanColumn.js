@@ -1,4 +1,5 @@
 import React from 'react';
+import { Draggable, Droppable } from 'react-beautiful-dnd';
 import { connect } from 'react-redux';
 import { cardAdd, cardDetail } from '../actions/kanbanActions';
 
@@ -18,18 +19,37 @@ class KanbanColumn extends React.Component {
             href="#"
             onClick={(e) => onCardAdd(e, column.id)}>+</a>
         </div>
-        <div className="KanbanColumn_container">
-          {
-            this.props.column.cards.map((card, card_index) => (
-              <div
-                className="KanbanColumn_ticket"
-                onClick={(e) => onCardDetail(e, column_index, card_index)}
-                key={`kanban_card_${card_index}`}>
-                #{card.id} <a href="#">{card.title}</a>
-              </div>
-            ))
-          }
-        </div>
+        <Droppable droppableId={`kanban_column_${column.id}`}>
+          {(provided, snapshot) => (
+            <div
+              {...provided.droppableProps}
+              className="KanbanColumn_container"
+              ref={provided.innerRef}>
+              {
+                this.props.column.cards.map((card, card_index) => (
+                  <Draggable
+                    index={card_index}
+                    draggableId={card.id}
+                    key={`kanban_card_${column_index}_${card_index}`}>
+                    {(provided, snapshot) => (
+                      <div>
+                        <div
+                          {...provided.dragHandleProps}
+                          {...provided.draggableProps}
+                          className="KanbanColumn_ticket"
+                          onClick={(e) => onCardDetail(e, column_index, card_index)}
+                          ref={provided.innerRef}>
+                          #{card.id} <a href="#">{card.title}</a>
+                        </div>
+                        {provided.placeholder}
+                      </div>
+                    )}
+                  </Draggable>
+                ))
+              }
+            </div>
+          )}
+        </Droppable>
       </div>
     );
   }
