@@ -21,7 +21,7 @@ export function cardDetail(column_index, card_index) {
   };
 };
 
-export function cardOrder(source, destination) {
+export function cardMove(source, destination) {
   const destination_column_parts = destination.droppableId.split("kanban_column_");
   const destination_column_id = parseInt(destination_column_parts[1]);
   const source_column_parts = source.droppableId.split("kanban_column_");
@@ -31,7 +31,7 @@ export function cardOrder(source, destination) {
     destination_column_id,
     source_card_index: source.index,
     source_column_id,
-    type: 'CARD_ORDER',
+    type: 'CARD_MOVE',
   };
 };
 

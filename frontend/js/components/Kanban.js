@@ -3,7 +3,7 @@ import { DragDropContext } from 'react-beautiful-dnd';
 import { connect } from 'react-redux';
 import CardDetail from './CardDetail';
 import KanbanColumn from './KanbanColumn';
-import { cardOrder, load } from '../actions/kanbanActions';
+import { cardMove, load } from '../actions/kanbanActions';
 
 class Kanban extends React.Component {
   constructor(props) {
@@ -17,8 +17,8 @@ class Kanban extends React.Component {
        return;
     }
 
-    // console.log('>>>', result.source, result.destination)
-    this.props.onCardOrder(result.source, result.destination);
+    this.props.onCardMove(result.source, result.destination);
+    this.props.onOrder(this.props.id, this.props.columns);
   }
 
   render() {
@@ -67,8 +67,25 @@ function mapDispatchToProps(dispatch) {
       );
     },
 
-    onCardOrder: (source, destination) => {
-      dispatch(cardOrder(source, destination));
+    onCardMove: (source, destination) => {
+      dispatch(cardMove(source, destination));
+    },
+
+    onOrder: (id, kanban_columns) => {
+      const data = {
+        id,
+        kanban_columns
+      };
+      dispatch(
+        load(
+          'put',
+          `/api/kanbans/${id}/order.json`,
+          "LOAD_KANBAN_BEGIN",
+          "ORDER_KANBAN_SUCCESS",
+          "LOAD_KANBAN_ERROR",
+          data
+        )
+      );
     }
   };
 }

@@ -43,27 +43,6 @@ export default function kanbanReducer(state = initialState, action) {
         });
       })();
 
-    case 'CARD_ORDER':
-      return (() => {
-        let card = null;
-        const kanban_columns = state.kanban_columns.map((column, column_index) => {
-          // Remove card from old spot.
-          if (column.id === action.source_column_id) {
-            [card] = column.cards.splice(action.source_card_index, 1);
-          }
-          return Object.assign({}, column);
-        }).map((column, column_index) => {
-          // Insert card into new spot.
-          if (card !== null && column.id === action.destination_column_id) {
-            column.cards.splice(action.destination_card_index, 0, card);
-          }
-          return Object.assign({}, column);
-        });
-        return Object.assign({}, state, {
-          kanban_columns
-        });
-      })();
-
     case "CARD_CREATE_BEGIN":
       return (function() {
         return Object.assign({}, state, {
@@ -94,6 +73,27 @@ export default function kanbanReducer(state = initialState, action) {
         return Object.assign({}, state, {
           current_card: null,
           is_detail_saving: false,
+          kanban_columns
+        });
+      })();
+
+    case 'CARD_MOVE':
+      return (() => {
+        let card = null;
+        const kanban_columns = state.kanban_columns.map((column, column_index) => {
+          // Remove card from old spot.
+          if (column.id === action.source_column_id) {
+            [card] = column.cards.splice(action.source_card_index, 1);
+          }
+          return Object.assign({}, column);
+        }).map((column, column_index) => {
+          // Insert card into new spot.
+          if (card !== null && column.id === action.destination_column_id) {
+            column.cards.splice(action.destination_card_index, 0, card);
+          }
+          return Object.assign({}, column);
+        });
+        return Object.assign({}, state, {
           kanban_columns
         });
       })();
@@ -153,6 +153,13 @@ export default function kanbanReducer(state = initialState, action) {
         return Object.assign({}, state, {
           is_loading: false,
           kanban_columns: action.json.kanban_columns
+        });
+      })();
+
+    case "ORDER_KANBAN_SUCCESS":
+      return (function() {
+        return Object.assign({}, state, {
+          is_loading: false
         });
       })();
   }

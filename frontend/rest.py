@@ -118,6 +118,24 @@ class KanbanViewSet(ModelViewSet):
     queryset = models.Project.objects.all()
     serializer_class = KanbanSerializer
 
+    @action(methods=['put'], detail=True)
+    def order(self, request, pk=None, format='json'):
+        project = self.get_object()
+        serializer = KanbanSerializer(data=request.data)
+        if serializer.is_valid():
+            for kanban_column in request.data.get('kanban_columns', []):
+                i = 0
+                column = models.KanbanColumn(pk=kanban_column.get('id'))
+                for card in kanban_column.get('cards', []):
+                    card_record = models.Card.objects.get(pk=card.get('id'))
+                    card_record.kanban_column = column
+                    card_record.kanban_column_order = i
+                    card_record.save()
+                    i += 1
+            return Response(serializer.data)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class KanbanColumnViewSet(ModelViewSet):
     queryset = models.KanbanColumn.objects.all()
