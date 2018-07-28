@@ -7,6 +7,7 @@ class CardDetail extends React.Component {
   constructor(props) {
     super(props);
 
+    this.onArchive = this.onArchive.bind(this);
     this.onCancel = this.onCancel.bind(this);
     this.onEdit = this.onEdit.bind(this);
     this.onSave = this.onSave.bind(this);
@@ -26,6 +27,14 @@ class CardDetail extends React.Component {
     const obj = {};
     obj[key] = event.target.value;
     this.setState(obj);
+  }
+
+  onArchive(event) {
+    event.preventDefault();
+
+    const { card } = this.props;
+
+    this.props.onArchive(card);
   }
 
   onCancel(event) {
@@ -116,7 +125,8 @@ class CardDetail extends React.Component {
               disabled={this.props.is_saving}
               onClick={this.onEdit}>Edit Card</button>
             <button className="CardDetail_button -secondary"
-              disabled={this.props.is_saving}>Archive Card</button>
+              disabled={this.props.is_saving}
+              onClick={this.onArchive}>Archive Card</button>
           </React.Fragment>
         )) || (
           <React.Fragment>
@@ -138,6 +148,20 @@ function mapStateToProps(state, ownProps) {
 
 function mapDispatchToProps(dispatch) {
   return {
+    onArchive: (card) => {
+      card.is_archived = true;
+      dispatch(
+        load(
+          'put',
+          `/api/cards/${card.id}.json`,
+          "CARD_UPDATE_BEGIN",
+          "CARD_ARCHIVE_SUCCESS",
+          "CARD_UPDATE_ERROR",
+          card
+        )
+      );
+    },
+
     onClose: () => {
       dispatch(cardClose());
     },

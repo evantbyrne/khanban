@@ -7,15 +7,6 @@ const initialState = {
   kanban_columns: []
 };
 
-// a little function to help us with reordering the result
-const reorder = (list, startIndex, endIndex) => {
-  const result = Array.from(list);
-  const [removed] = result.splice(startIndex, 1);
-  result.splice(endIndex, 0, removed);
-
-  return result;
-};
-
 export default function kanbanReducer(state = initialState, action) {
   switch (action.type) {
     case 'CARD_ADD':
@@ -25,6 +16,22 @@ export default function kanbanReducer(state = initialState, action) {
             id: null,
             kanban_column: action.kanban_column
           }
+        });
+      })();
+
+    case "CARD_ARCHIVE_SUCCESS":
+      return (function() {
+        const kanban_columns = state.kanban_columns.map((column) => {
+          return Object.assign({}, column, {
+            cards: column.cards.filter((card) => {
+              return !card.is_archived;
+            })
+          });
+        });
+        return Object.assign({}, state, {
+          current_card: null,
+          is_detail_saving: false,
+          kanban_columns
         });
       })();
 

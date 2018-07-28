@@ -48,6 +48,7 @@
     "pk": 1,
     "fields": {
       "description": "The quick brown fox jumps over the lazy dog.",
+      "is_archived": false,
       "kanban_column_id": 1,
       "kanban_column_order": 1,
       "title": "Hello, World"

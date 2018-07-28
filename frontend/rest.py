@@ -1,7 +1,7 @@
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.routers import DefaultRouter
-from rest_framework.serializers import HyperlinkedModelSerializer, PrimaryKeyRelatedField
+from rest_framework.serializers import HyperlinkedModelSerializer, PrimaryKeyRelatedField, SerializerMethodField
 from rest_framework.viewsets import ModelViewSet
 from . import models
 
@@ -14,6 +14,7 @@ class CardSerializer(HyperlinkedModelSerializer):
         fields = (
             'description',
             'id',
+            'is_archived',
             'kanban_column',
             'kanban_column_order',
             'title',
@@ -29,6 +30,7 @@ class CardSerializer(HyperlinkedModelSerializer):
 
     def fill(self, card, data):
         card.description = data.get('description')
+        card.is_archived = data.get('is_archived', False)
         card.kanban_column = data.get('kanban_column', None)
         card.kanban_column_order = data.get('kanban_column_order', 0)
         card.title = data.get('title')
@@ -41,8 +43,13 @@ class CardSerializer(HyperlinkedModelSerializer):
 
 
 class KanbanColumnSerializer(HyperlinkedModelSerializer):
-    cards = CardSerializer(many=True)
+    cards = SerializerMethodField()
     project = PrimaryKeyRelatedField(queryset=models.Project.objects.all())
+
+    def get_cards(self, column):
+        queryset = models.Card.objects.filter(kanban_column=column, is_archived=False)
+        serializer = CardSerializer(instance=queryset, many=True)
+        return serializer.data
 
     class Meta:
         model = models.KanbanColumn
@@ -110,7 +117,7 @@ class ProjectSerializer(HyperlinkedModelSerializer):
 
 
 class CardViewSet(ModelViewSet):
-    queryset = models.Card.objects.all()
+    queryset = models.Card.objects.filter(is_archived=False)
     serializer_class = CardSerializer
 
 

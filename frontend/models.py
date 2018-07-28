@@ -4,6 +4,7 @@ from uuslug import uuslug
 
 class Card(models.Model):
     description = models.TextField(blank=True, default="")
+    is_archived = models.BooleanField(blank=True, default=False)
     kanban_column = models.ForeignKey(
         'KanbanColumn',
         blank=True,
