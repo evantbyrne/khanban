@@ -80,7 +80,11 @@
   .Kanban_container {
     display: flex;
     flex-direction: row;
-    height: calc(100vh - 42px); }
+    height: calc(100vh - 42px);
+    overflow: auto;
+    width: 100%; }
+    .Kanban.-card-detail .Kanban_container {
+      width: calc(100% - 500px); }
 
 .KanbanColumn {
   border-right: 2px solid black;
@@ -100,6 +104,7 @@
   .KanbanColumn_header-add {
     float: right; }
   .KanbanColumn_ticket {
+    background: white;
     border: 1px solid black;
     margin-bottom: 10px;
     padding: 10px; }

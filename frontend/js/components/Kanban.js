@@ -25,7 +25,7 @@ class Kanban extends React.Component {
     const onDragEnd = this.onDragEnd.bind(this);
     const is_editing = (this.props.current_card !== null && this.props.current_card.id === null);
     return (
-      <div className="Kanban">
+      <div className={`Kanban ${this.props.current_card ? '-card-detail' : ''}`}>
         <div className="Kanban_container">
           <DragDropContext onDragEnd={onDragEnd}>
             {
