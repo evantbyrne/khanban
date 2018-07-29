@@ -14,18 +14,21 @@ class CardDetail extends React.Component {
 
     this.state = {
       is_editing: props.is_editing || false,
+      title_error: false
     };
   }
 
   componentWillReceiveProps(newProps) {
     this.setState({
       is_editing: newProps.is_editing || false,
+      title_error: false
     });
   }
 
   mutate(event, key) {
     const obj = {};
     obj[key] = event.target.value;
+    obj[`${key}_error`] = false;
     this.setState(obj);
   }
 
@@ -64,6 +67,13 @@ class CardDetail extends React.Component {
   onSave(event) {
     event.preventDefault();
 
+    if (!this.state.title) {
+      this.setState({
+        title_error: true
+      });
+      return;
+    }
+
     const { card } = this.props;
 
     card.description = this.state.description;
@@ -91,7 +101,7 @@ class CardDetail extends React.Component {
             #{card.id} {card.title}
           </div>
         )) || (
-          <input className="CardDetail_field"
+          <input className={`CardDetail_field ${this.state.title_error ? '-error' : ''}`}
             onChange={(e) => mutate(e, 'title')}
             placeholder="Title..."
             value={this.state.title} />

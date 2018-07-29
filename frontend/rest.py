@@ -29,7 +29,7 @@ class CardSerializer(HyperlinkedModelSerializer):
         return card
 
     def fill(self, card, data):
-        card.description = data.get('description')
+        card.description = data.get('description', '')
         card.is_archived = data.get('is_archived', False)
         card.kanban_column = data.get('kanban_column', None)
         card.kanban_column_order = data.get('kanban_column_order', 0)
