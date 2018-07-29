@@ -13,8 +13,10 @@ export default function kanbanReducer(state = initialState, action) {
       return (() => {
         return Object.assign({}, state, {
           current_card: {
+            description: '',
             id: null,
-            kanban_column: action.kanban_column
+            kanban_column: action.kanban_column,
+            title: ''
           }
         });
       })();

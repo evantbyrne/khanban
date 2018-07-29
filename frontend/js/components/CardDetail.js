@@ -20,7 +20,9 @@ class CardDetail extends React.Component {
 
   componentWillReceiveProps(newProps) {
     this.setState({
+      description: newProps.card ? newProps.card.description : this.state.description,
       is_editing: newProps.is_editing || false,
+      title: newProps.card ? newProps.card.title: this.state.title,
       title_error: false
     });
   }
