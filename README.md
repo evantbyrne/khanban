@@ -12,6 +12,7 @@ The wrath of Kanban.
 - Add a Heroku Postgres database via the Add-ons interface.
 - Run migrations via Heroku CLI: `heroku run "python manage.py migrate" --app=APP_NAME`
 - Load initial data via Heroku CLI: `heroku run "python manage.py loaddata initial_data" --app=APP_NAME`
+- Create admin user: `heroku run "python manage.py createsuperuser" --app=APP_NAME`
 
 
 ## Run Development Server
@@ -24,6 +25,7 @@ The wrath of Kanban.
 - Open a new tab and run bash in the Django container: `docker exec -it khanban_web_1 bash`
 - Run migrations: `python manage.py migrate`
 - Load initial data: `python manage.py loaddata initial_data`
+- Create admin user: `python manage.py createsuperuser`
 
 
 ## Frontend Development
