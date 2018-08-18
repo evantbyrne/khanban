@@ -4,7 +4,8 @@ const initialState = {
   id: 1,
   is_loading: true,
   is_detail_saving: false,
-  kanban_columns: []
+  kanban_columns: [],
+  token: null
 };
 
 export default function kanbanReducer(state = initialState, action) {
@@ -165,10 +166,48 @@ export default function kanbanReducer(state = initialState, action) {
         });
       })();
 
+    case "LOGIN_BEGIN":
+      return (function() {
+        return Object.assign({}, state, {
+          is_loading: true
+        });
+      })();
+
+    case "LOGIN_ERROR":
+      return (function() {
+        let error = null
+        if (action.error.response.data && action.error.response.data.non_field_errors) {
+          error = action.error.response.data.non_field_errors;
+        } else {
+          error = action.error;
+        }
+        alert(error);
+        console.log("ERROR", action.error);
+        return Object.assign({}, state, {
+          error,
+          is_loading: false
+        });
+      })();
+
+    case "LOGIN_SUCCESS":
+      return (function() {
+        return Object.assign({}, state, {
+          is_loading: false,
+          token: action.json.token
+        });
+      })();
+
     case "ORDER_KANBAN_SUCCESS":
       return (function() {
         return Object.assign({}, state, {
           is_loading: false
+        });
+      })();
+
+    case "VIEW_LOGIN":
+      return (function() {
+        return Object.assign({}, state, {
+          token: null
         });
       })();
   }

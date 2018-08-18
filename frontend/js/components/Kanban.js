@@ -6,19 +6,17 @@ import KanbanColumn from './KanbanColumn';
 import { cardMove, load } from '../actions/kanbanActions';
 
 class Kanban extends React.Component {
-  constructor(props) {
-    super(props);
-    props.load(props.id);
+  componentDidMount() {
+    this.props.load(this.props.token, this.props.id);
   }
 
   onDragEnd(result) {
-    // Dropped outside the list.
     if(!result.destination) {
        return;
     }
 
     this.props.onCardMove(result.source, result.destination);
-    this.props.onOrder(this.props.id, this.props.columns);
+    this.props.onOrder(this.props.token, this.props.id, this.props.columns);
   }
 
   render() {
@@ -49,15 +47,17 @@ function mapStateToProps(state, ownProps) {
     columns: state.kanban.kanban_columns,
     current_card: state.kanban.current_card,
     id: state.kanban.id,
-    is_loading: state.kanban.is_loading
+    is_loading: state.kanban.is_loading,
+    token: state.kanban.token
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    load: function(id) {
+    load: function(token, id) {
       dispatch(
         load(
+          token,
           'get',
           `/api/kanbans/${id}.json`,
           "LOAD_KANBAN_BEGIN",
@@ -71,13 +71,14 @@ function mapDispatchToProps(dispatch) {
       dispatch(cardMove(source, destination));
     },
 
-    onOrder: (id, kanban_columns) => {
+    onOrder: (token, id, kanban_columns) => {
       const data = {
         id,
         kanban_columns
       };
       dispatch(
         load(
+          token,
           'put',
           `/api/kanbans/${id}/order.json`,
           "LOAD_KANBAN_BEGIN",

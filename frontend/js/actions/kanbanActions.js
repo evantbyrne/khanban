@@ -1,4 +1,5 @@
 import axios from 'axios';
+import history from '../history';
 
 export function cardAdd(kanban_column) {
   return {
@@ -35,12 +36,17 @@ export function cardMove(source, destination) {
   };
 };
 
-export function load(method, url, type_begin, type_success, type_error, data = {}) {
-  const params = {
+export function load(token, method, url, type_begin, type_success, type_error, data = {}) {
+  let params = {
     data,
     method,
     url,
   };
+  if (token) {
+    params.headers = {
+      Authorization: `Token ${token}`
+    };
+  }
   return dispatch => {
     dispatch(loadBegin(type_begin));
     return axios(params)
@@ -48,6 +54,9 @@ export function load(method, url, type_begin, type_success, type_error, data = {
         return dispatch(loadSuccess(type_success, response.data));
       })
       .catch(error => {
+        if (error.response.status === 401) {
+          return dispatch(viewLogin());
+        }
         return dispatch(loadError(type_error, error));
       });
   };
@@ -70,5 +79,19 @@ export function loadError(type, error) {
   return {
     type,
     error
+  };
+}
+
+export function viewIndex() {
+  history.push('/');
+  return {
+    type: 'VIEW_INDEX'
+  };
+}
+
+export function viewLogin() {
+  history.push('/auth/login');
+  return {
+    type: 'VIEW_LOGIN'
   };
 }

@@ -37,9 +37,9 @@ class CardDetail extends React.Component {
   onArchive(event) {
     event.preventDefault();
 
-    const { card } = this.props;
+    const { card, token } = this.props;
 
-    this.props.onArchive(card);
+    this.props.onArchive(token, card);
   }
 
   onCancel(event) {
@@ -76,15 +76,15 @@ class CardDetail extends React.Component {
       return;
     }
 
-    const { card } = this.props;
+    const { card, token } = this.props;
 
     card.description = this.state.description;
     card.title = this.state.title;
 
     if (this.props.card.id === null) {
-      this.props.onCreate(card);
+      this.props.onCreate(token, card);
     } else {
-      this.props.onUpdate(card);
+      this.props.onUpdate(token, card);
     }
   }
 
@@ -154,16 +154,18 @@ class CardDetail extends React.Component {
 function mapStateToProps(state, ownProps) {
   return {
     card: state.kanban.current_card,
-    is_saving: state.kanban.is_detail_saving
+    is_saving: state.kanban.is_detail_saving,
+    token: state.kanban.token
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    onArchive: (card) => {
+    onArchive: (token, card) => {
       card.is_archived = true;
       dispatch(
         load(
+          token,
           'put',
           `/api/cards/${card.id}.json`,
           "CARD_UPDATE_BEGIN",
@@ -178,9 +180,10 @@ function mapDispatchToProps(dispatch) {
       dispatch(cardClose());
     },
 
-    onCreate: (card) => {
+    onCreate: (token, card) => {
       dispatch(
         load(
+          token,
           'post',
           `/api/cards.json`,
           "CARD_CREATE_BEGIN",
@@ -191,9 +194,10 @@ function mapDispatchToProps(dispatch) {
       );
     },
 
-    onUpdate: (card) => {
+    onUpdate: (token, card) => {
       dispatch(
         load(
+          token,
           'put',
           `/api/cards/${card.id}.json`,
           "CARD_UPDATE_BEGIN",
