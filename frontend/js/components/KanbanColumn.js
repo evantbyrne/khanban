@@ -39,7 +39,7 @@ class KanbanColumn extends React.Component {
                           className="KanbanColumn_ticket"
                           onClick={(e) => onCardDetail(e, column_index, card_index)}
                           ref={provided.innerRef}>
-                          #{card.id} <a href="#">{card.title}</a>
+                          #{card.id} <a href="#">{card.card_revisions[0].title}</a>
                         </div>
                         {provided.placeholder}
                       </div>

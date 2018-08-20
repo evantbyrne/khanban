@@ -20,9 +20,9 @@ class CardDetail extends React.Component {
 
   componentWillReceiveProps(newProps) {
     this.setState({
-      description: newProps.card ? newProps.card.description : this.state.description,
+      description: newProps.card ? newProps.card.card_revisions[0].description : this.state.description,
       is_editing: newProps.is_editing || false,
-      title: newProps.card ? newProps.card.title: this.state.title,
+      title: newProps.card ? newProps.card.card_revisions[0].title: this.state.title,
       title_error: false
     });
   }
@@ -38,6 +38,9 @@ class CardDetail extends React.Component {
     event.preventDefault();
 
     const { card, token } = this.props;
+
+    card.description = card.card_revisions[0].description;
+    card.title = card.card_revisions[0].title;
 
     this.props.onArchive(token, card);
   }
@@ -60,9 +63,9 @@ class CardDetail extends React.Component {
     const { card } = this.props;
 
     this.setState({
-      description: card.description,
+      description: card.card_revisions[0].description,
       is_editing: true,
-      title: card.title,
+      title: card.card_revisions[0].title,
     });
   }
 
@@ -100,7 +103,7 @@ class CardDetail extends React.Component {
       <div className="CardDetail">
         {(!this.state.is_editing && (
           <div className="CardDetail_title">
-            #{card.id} {card.title}
+            #{card.id} {card.card_revisions[0].title}
           </div>
         )) || (
           <input className={`CardDetail_field ${this.state.title_error ? '-error' : ''}`}
@@ -108,9 +111,9 @@ class CardDetail extends React.Component {
             placeholder="Title..."
             value={this.state.title} />
         )}
-        {!this.state.is_editing && card.description && (
+        {!this.state.is_editing && card.card_revisions[0].description && (
           <div className="CardDetail_description">
-            {card.description}
+            {card.card_revisions[0].description}
           </div>
         )}
         {this.state.is_editing && (

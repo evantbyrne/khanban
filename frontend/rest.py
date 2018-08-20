@@ -6,18 +6,41 @@ from rest_framework.viewsets import ModelViewSet
 from . import models
 
 
+class CardRevisionSerializer(HyperlinkedModelSerializer):
+    card = PrimaryKeyRelatedField(queryset=models.Card.objects.all())
+
+    class Meta:
+        model = models.CardRevision
+        fields = (
+            'card',
+            'created_at',
+            'description',
+            'id',
+            'is_archived',
+            'title',
+        )
+        read_only_fields = (
+            'id',
+        )
+
+
 class CardSerializer(HyperlinkedModelSerializer):
+    card_revisions = SerializerMethodField()
     kanban_column = PrimaryKeyRelatedField(queryset=models.KanbanColumn.objects.all())
+
+    def get_card_revisions(self, card):
+        queryset = models.CardRevision.objects.filter(card=card)
+        serializer = CardRevisionSerializer(instance=queryset, many=True)
+        return serializer.data
 
     class Meta:
         model = models.Card
         fields = (
-            'description',
+            'card_revisions',
             'id',
             'is_archived',
             'kanban_column',
             'kanban_column_order',
-            'title',
         )
         read_only_fields = (
             'id',
@@ -26,19 +49,28 @@ class CardSerializer(HyperlinkedModelSerializer):
     def create(self, data):
         card = self.fill(models.Card(), data)
         card.save()
+        self.make_revision(card)
         return card
 
     def fill(self, card, data):
-        card.description = data.get('description', '')
         card.is_archived = data.get('is_archived', False)
         card.kanban_column = data.get('kanban_column', None)
         card.kanban_column_order = data.get('kanban_column_order', 0)
-        card.title = data.get('title')
         return card
+
+    def make_revision(self, card):
+        data = self.context['request'].data
+        revision = models.CardRevision()
+        revision.card = card
+        revision.description = data.get('description', '')
+        revision.is_archived = card.is_archived
+        revision.title = data.get('title')
+        revision.save()
 
     def update(self, card, data):
         card = self.fill(card, data)
         card.save()
+        self.make_revision(card)
         return card
 
 

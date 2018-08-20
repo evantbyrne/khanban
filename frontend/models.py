@@ -3,7 +3,6 @@ from uuslug import uuslug
 
 
 class Card(models.Model):
-    description = models.TextField(blank=True, default="")
     is_archived = models.BooleanField(blank=True, default=False)
     kanban_column = models.ForeignKey(
         'KanbanColumn',
@@ -14,10 +13,25 @@ class Card(models.Model):
         related_query_name='card',
     )
     kanban_column_order = models.PositiveIntegerField(blank=True, default=0)
-    title = models.CharField(max_length=255)
 
     class Meta:
         ordering = ['kanban_column_order']
+
+
+class CardRevision(models.Model):
+    card = models.ForeignKey(
+        'Card',
+        on_delete=models.CASCADE,
+        related_name='card_revisions',
+        related_query_name='card_revision',
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    description = models.TextField(blank=True, default="")
+    is_archived = models.BooleanField(blank=True, default=False)
+    title = models.CharField(max_length=255)
+
+    class Meta:
+        ordering = ['-id']
 
 
 class KanbanColumn(models.Model):

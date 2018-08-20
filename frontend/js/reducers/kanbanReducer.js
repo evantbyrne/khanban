@@ -14,10 +14,14 @@ export default function kanbanReducer(state = initialState, action) {
       return (() => {
         return Object.assign({}, state, {
           current_card: {
-            description: '',
+            card_revisions: [
+              {
+                description: '',
+                title: ''
+              }
+            ],
             id: null,
             kanban_column: action.kanban_column,
-            title: ''
           }
         });
       })();
@@ -126,10 +130,12 @@ export default function kanbanReducer(state = initialState, action) {
 
     case "CARD_UPDATE_SUCCESS":
       return (function() {
+        let current_card = null;
         const kanban_columns = state.kanban_columns.map((column) => {
           return Object.assign({}, column, {
             cards: column.cards.map((card) => {
               if (card.id == action.json.id) {
+                current_card = action.json;
                 return action.json;
               }
               return card;
@@ -137,6 +143,7 @@ export default function kanbanReducer(state = initialState, action) {
           });
         });
         return Object.assign({}, state, {
+          current_card: state.current_card ? current_card : null,
           is_detail_saving: false,
           kanban_columns
         });
