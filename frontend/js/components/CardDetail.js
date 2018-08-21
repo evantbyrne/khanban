@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { cardClose, cardEditing, load } from '../actions/kanbanActions';
+import { cardClose, cardEditing, load, viewIndex } from '../actions/kanbanActions';
 import Tag from './Tag';
 
 class CardDetail extends React.Component {
@@ -20,9 +20,9 @@ class CardDetail extends React.Component {
 
   componentWillReceiveProps(newProps) {
     this.setState({
-      description: newProps.card ? newProps.card.card_revisions[0].description : this.state.description,
+      description: newProps.card ? newProps.card_revision.description : this.state.description,
       is_editing: newProps.is_editing || false,
-      title: newProps.card ? newProps.card.card_revisions[0].title: this.state.title,
+      title: newProps.card ? newProps.card_revision.title: this.state.title,
       title_error: false
     });
   }
@@ -37,10 +37,10 @@ class CardDetail extends React.Component {
   onArchive(event) {
     event.preventDefault();
 
-    const { card, token } = this.props;
+    const { card, card_revision, token } = this.props;
 
-    card.description = card.card_revisions[0].description;
-    card.title = card.card_revisions[0].title;
+    card.description = card_revision.description;
+    card.title = card_revision.title;
 
     this.props.onArchive(token, card);
   }
@@ -60,12 +60,12 @@ class CardDetail extends React.Component {
   onEdit(event) {
     event.preventDefault();
 
-    const { card } = this.props;
+    const { card, card_revision } = this.props;
 
     this.setState({
-      description: card.card_revisions[0].description,
+      description: card_revision.description,
       is_editing: true,
-      title: card.card_revisions[0].title,
+      title: card_revision.title,
     });
   }
 
@@ -92,7 +92,7 @@ class CardDetail extends React.Component {
   }
 
   render() {
-    const { card } = this.props;
+    const { card, card_revision } = this.props;
     const mutate = this.mutate.bind(this);
 
     if (card === null) {
@@ -103,7 +103,7 @@ class CardDetail extends React.Component {
       <div className="CardDetail">
         {(!this.state.is_editing && (
           <div className="CardDetail_title">
-            #{card.id} {card.card_revisions[0].title}
+            #{card.id} {card_revision.title}
           </div>
         )) || (
           <input className={`CardDetail_field ${this.state.title_error ? '-error' : ''}`}
@@ -111,9 +111,9 @@ class CardDetail extends React.Component {
             placeholder="Title..."
             value={this.state.title} />
         )}
-        {!this.state.is_editing && card.card_revisions[0].description && (
+        {!this.state.is_editing && card_revision.description && (
           <div className="CardDetail_description">
-            {card.card_revisions[0].description}
+            {card_revision.description}
           </div>
         )}
         {this.state.is_editing && (
@@ -157,6 +157,7 @@ class CardDetail extends React.Component {
 function mapStateToProps(state, ownProps) {
   return {
     card: state.kanban.current_card,
+    card_revision: state.kanban.current_card_revision,
     is_saving: state.kanban.is_detail_saving,
     token: state.kanban.token
   };
@@ -166,6 +167,7 @@ function mapDispatchToProps(dispatch) {
   return {
     onArchive: (token, card) => {
       card.is_archived = true;
+      dispatch(viewIndex());
       dispatch(
         load(
           token,

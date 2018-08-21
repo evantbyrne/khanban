@@ -3,9 +3,22 @@ import { DragDropContext } from 'react-beautiful-dnd';
 import { connect } from 'react-redux';
 import CardDetail from './CardDetail';
 import KanbanColumn from './KanbanColumn';
-import { cardMove, load } from '../actions/kanbanActions';
+import { cardDetail, cardMove, load } from '../actions/kanbanActions';
 
 class Kanban extends React.Component {
+  static getDerivedStateFromProps(props, state) {
+    if (!props.is_loading && props.card_id) {
+      const card_revision_id = (props.current_card_revision && props.current_card_revision.id) || 0;
+      if (!props.current_card
+        || props.current_card.id != props.card_id
+        || card_revision_id != props.card_revision_id) {
+        props.onCardDetail(props.card_id, props.card_revision_id);
+      }
+    }
+
+    return state;
+  }
+
   componentDidMount() {
     this.props.load(this.props.token, this.props.id);
   }
@@ -46,6 +59,7 @@ function mapStateToProps(state, ownProps) {
   return {
     columns: state.kanban.kanban_columns,
     current_card: state.kanban.current_card,
+    current_card_revision: state.kanban.current_card_revision,
     id: state.kanban.id,
     is_loading: state.kanban.is_loading,
     token: state.kanban.token
@@ -65,6 +79,10 @@ function mapDispatchToProps(dispatch) {
           "LOAD_KANBAN_ERROR"
         )
       );
+    },
+
+    onCardDetail: (card_id, card_revision_id) => {
+      dispatch(cardDetail(card_id, card_revision_id));
     },
 
     onCardMove: (source, destination) => {

@@ -1,12 +1,12 @@
 import React from 'react';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 import { connect } from 'react-redux';
-import { cardAdd, cardDetail } from '../actions/kanbanActions';
+import { cardAdd, viewCard } from '../actions/kanbanActions';
 
 class KanbanColumn extends React.Component {
   render() {
     const onCardAdd = this.props.onCardAdd.bind(this);
-    const onCardDetail = this.props.onCardDetail.bind(this);
+    const onViewCard = this.props.onViewCard.bind(this);
     const column = this.props.column;
     const column_index = this.props.index;
 
@@ -37,7 +37,7 @@ class KanbanColumn extends React.Component {
                           {...provided.dragHandleProps}
                           {...provided.draggableProps}
                           className="KanbanColumn_ticket"
-                          onClick={(e) => onCardDetail(e, column_index, card_index)}
+                          onClick={(e) => onViewCard(e, card.id)}
                           ref={provided.innerRef}>
                           #{card.id} <a href="#">{card.card_revisions[0].title}</a>
                         </div>
@@ -69,10 +69,10 @@ function mapDispatchToProps(dispatch) {
       dispatch(cardAdd(kanban_column));
     },
 
-    onCardDetail: (event, column_index, card_index) => {
+    onViewCard: (event, card_id) => {
       event.preventDefault();
-      dispatch(cardDetail(column_index, card_index));
-    },
+      dispatch(viewCard(card_id));
+    }
   };
 }
 

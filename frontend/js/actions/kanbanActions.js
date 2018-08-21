@@ -14,10 +14,10 @@ export function cardClose() {
   };
 };
 
-export function cardDetail(column_index, card_index) {
+export function cardDetail(card_id, card_revision_id) {
   return {
-    card_index,
-    column_index,
+    card_id,
+    card_revision_id,
     type: 'CARD_DETAIL',
   };
 };
@@ -79,6 +79,13 @@ export function loadError(type, error) {
   return {
     type,
     error
+  };
+}
+
+export function viewCard(id) {
+  history.push(`/card/${id}`);
+  return {
+    type: 'VIEW_CARD'
   };
 }
 

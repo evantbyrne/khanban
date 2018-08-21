@@ -1,5 +1,6 @@
 const initialState = {
   current_card: null,
+  current_card_revision: null,
   error: null,
   id: 1,
   is_loading: true,
@@ -14,14 +15,12 @@ export default function kanbanReducer(state = initialState, action) {
       return (() => {
         return Object.assign({}, state, {
           current_card: {
-            card_revisions: [
-              {
-                description: '',
-                title: ''
-              }
-            ],
             id: null,
             kanban_column: action.kanban_column,
+          },
+          current_card_revision: {
+            description: '',
+            title: ''
           }
         });
       })();
@@ -37,6 +36,7 @@ export default function kanbanReducer(state = initialState, action) {
         });
         return Object.assign({}, state, {
           current_card: null,
+          current_card_revision: null,
           is_detail_saving: false,
           kanban_columns
         });
@@ -51,9 +51,22 @@ export default function kanbanReducer(state = initialState, action) {
 
     case 'CARD_DETAIL':
       return (() => {
-        const current_card = state.kanban_columns[action.column_index].cards[action.card_index];
+        const card_id = parseInt(action.card_id);
+        const card_revision_id = parseInt(action.card_revision_id);
+        let current_card = null;
+        state.kanban_columns.map(column => {
+          column.cards.map(card => {
+            if (card.id === card_id) {
+              current_card = card;
+            }
+          });
+        });
+        const current_card_revision = (action.card_revision_id
+          ? current_card.card_revisions.find(revision => (revision.id === card_revision_id))
+          : current_card.card_revisions[0]);
         return Object.assign({}, state, {
-          current_card
+          current_card,
+          current_card_revision
         });
       })();
 
