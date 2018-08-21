@@ -82,8 +82,12 @@ export function loadError(type, error) {
   };
 }
 
-export function viewCard(id) {
-  history.push(`/card/${id}`);
+export function viewCard(id, revision_id = null) {
+  if (revision_id) {
+    history.push(`/card/${id}/revision/${revision_id}`);
+  } else {
+    history.push(`/card/${id}`);
+  }
   return {
     type: 'VIEW_CARD'
   };

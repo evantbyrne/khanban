@@ -57,6 +57,12 @@
     }
   }
 
+  &_revisions {
+    border-bottom: 1px solid black;
+    display: block;
+    padding: 10px 20px;
+  }
+
   &_tags {
     border-bottom: 1px solid black;
     display: flex;

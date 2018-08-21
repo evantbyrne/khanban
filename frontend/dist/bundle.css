@@ -47,6 +47,10 @@
     .CardDetail_field.-text {
       font-size: 16px;
       height: 300px; }
+  .CardDetail_revisions {
+    border-bottom: 1px solid black;
+    display: block;
+    padding: 10px 20px; }
   .CardDetail_tags {
     border-bottom: 1px solid black;
     display: flex;

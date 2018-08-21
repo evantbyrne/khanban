@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { cardClose, cardEditing, load, viewIndex } from '../actions/kanbanActions';
+import { cardClose, cardEditing, load, viewCard, viewIndex } from '../actions/kanbanActions';
 import Tag from './Tag';
 
 class CardDetail extends React.Component {
@@ -92,7 +92,7 @@ class CardDetail extends React.Component {
   }
 
   render() {
-    const { card, card_revision } = this.props;
+    const { card, card_revision, onViewCard } = this.props;
     const mutate = this.mutate.bind(this);
 
     if (card === null) {
@@ -102,8 +102,23 @@ class CardDetail extends React.Component {
     return (
       <div className="CardDetail">
         {(!this.state.is_editing && (
-          <div className="CardDetail_title">
-            #{card.id} {card_revision.title}
+          <div>
+            <label className="CardDetail_revisions">
+              <span className="CardDetail_revisions-label">Revision: </span>
+              <select
+                className="CardDetail_revisions-select"
+                onChange={(e) => onViewCard(card.id, e.target.value)}
+                value={card_revision.id}>
+                {card.card_revisions.map(revision => (
+                  <option
+                    key={revision.id}
+                    value={revision.id}>{revision.created_at}</option>
+                ))}
+              </select>
+            </label>
+            <div className="CardDetail_title">
+              #{card.id} {card_revision.title}
+            </div>
           </div>
         )) || (
           <input className={`CardDetail_field ${this.state.title_error ? '-error' : ''}`}
@@ -212,6 +227,10 @@ function mapDispatchToProps(dispatch) {
         )
       );
     },
+
+    onViewCard: (card_id, card_revision_id) => {
+      dispatch(viewCard(card_id, card_revision_id));
+    }
   };
 }
 
