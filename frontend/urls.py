@@ -4,6 +4,7 @@ from rest_framework.authtoken.views import obtain_auth_token
 from . import views, rest
 
 urlpatterns = [
+    path('add/<int:kanban_column_id>/', views.add, name='add'),
     path('api/', include(rest.router.urls)),
     path('api/token/', obtain_auth_token, name='auth_token'),
     path('auth/login/', views.index, name='auth_login'),

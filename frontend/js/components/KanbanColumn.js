@@ -1,11 +1,11 @@
 import React from 'react';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 import { connect } from 'react-redux';
-import { cardAdd, viewCard } from '../actions/kanbanActions';
+import { viewCard, viewCardAdd } from '../actions/kanbanActions';
 
 class KanbanColumn extends React.Component {
   render() {
-    const onCardAdd = this.props.onCardAdd.bind(this);
+    const onViewCardAdd = this.props.onViewCardAdd.bind(this);
     const onViewCard = this.props.onViewCard.bind(this);
     const column = this.props.column;
     const column_index = this.props.index;
@@ -17,7 +17,7 @@ class KanbanColumn extends React.Component {
           <a
             className="KanbanColumn_header-add"
             href="#"
-            onClick={(e) => onCardAdd(e, column.id)}>+</a>
+            onClick={(e) => onViewCardAdd(e, column.id)}>+</a>
         </div>
         <Droppable droppableId={`kanban_column_${column.id}`}>
           {(provided, snapshot) => (
@@ -64,14 +64,14 @@ function mapStateToProps(state, ownProps) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    onCardAdd: (event, kanban_column) => {
-      event.preventDefault();
-      dispatch(cardAdd(kanban_column));
-    },
-
     onViewCard: (event, card_id) => {
       event.preventDefault();
       dispatch(viewCard(card_id));
+    },
+
+    onViewCardAdd: (event, kanban_column) => {
+      event.preventDefault();
+      dispatch(viewCardAdd(kanban_column));
     }
   };
 }

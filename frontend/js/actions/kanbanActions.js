@@ -93,6 +93,13 @@ export function viewCard(id, revision_id = null) {
   };
 }
 
+export function viewCardAdd(kanban_column_id) {
+  history.push(`/add/${kanban_column_id}`);
+  return {
+    type: 'VIEW_CARD_ADD'
+  };
+}
+
 export function viewIndex() {
   history.push('/');
   return {

@@ -21,6 +21,8 @@ const KanbanView = ({ match }) => (
     <Kanban
       card_id={match.params.card_id || null}
       card_revision_id={match.params.card_revision_id || null}
+      kanban_column_id={match.params.kanban_column_id || null}
+      path={match.path}
     />
   </div>
 );
@@ -30,6 +32,7 @@ const app = (
     <Provider store={store}>
       <Switch>
         <Route exact path='/' component={KanbanView}/>
+        <Route exact path='/add/:kanban_column_id' component={KanbanView}/>
         <Route exact path='/card/:card_id' component={KanbanView}/>
         <Route exact path='/card/:card_id/revision/:card_revision_id' component={KanbanView}/>
         <Route path='/auth/login' component={AuthView}/>

@@ -93,11 +93,14 @@ class CardDetail extends React.Component {
 
   render() {
     const { card, card_revision, onViewCard } = this.props;
-    const mutate = this.mutate.bind(this);
 
     if (card === null) {
       return null;
     }
+
+    const is_latest_revision = card_revision.id === card.card_revisions[0].id;
+    const is_loading = !this.state.is_editing || this.props.is_saving;
+    const mutate = this.mutate.bind(this);
 
     return (
       <div className="CardDetail">
@@ -149,7 +152,7 @@ class CardDetail extends React.Component {
             }
           </div>
         )}
-        {((!this.state.is_editing || this.props.is_saving) && (
+        {is_loading && is_latest_revision && (
           <React.Fragment>
             <button className="CardDetail_button"
               disabled={this.props.is_saving}
@@ -158,7 +161,8 @@ class CardDetail extends React.Component {
               disabled={this.props.is_saving}
               onClick={this.onArchive}>Archive Card</button>
           </React.Fragment>
-        )) || (
+        )}
+        {!is_loading && is_latest_revision && (
           <React.Fragment>
             <button className="CardDetail_button" onClick={this.onSave}>Save</button>
             <button className="CardDetail_button -secondary" onClick={this.onCancel}>Cancel</button>
@@ -198,6 +202,7 @@ function mapDispatchToProps(dispatch) {
 
     onClose: () => {
       dispatch(cardClose());
+      dispatch(viewIndex());
     },
 
     onCreate: (token, card) => {
@@ -215,6 +220,7 @@ function mapDispatchToProps(dispatch) {
     },
 
     onUpdate: (token, card) => {
+      dispatch(viewCard(card.id));
       dispatch(
         load(
           token,

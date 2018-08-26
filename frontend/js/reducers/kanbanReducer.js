@@ -15,6 +15,12 @@ export default function kanbanReducer(state = initialState, action) {
       return (() => {
         return Object.assign({}, state, {
           current_card: {
+            card_revisions: [
+              {
+                description: '',
+                title: ''
+              }
+            ],
             id: null,
             kanban_column: action.kanban_column,
           },
@@ -45,7 +51,8 @@ export default function kanbanReducer(state = initialState, action) {
     case 'CARD_CLOSE':
       return (() => {
         return Object.assign({}, state, {
-          current_card: null
+          current_card: null,
+          current_card_revision: null
         });
       })();
 
