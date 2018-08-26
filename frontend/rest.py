@@ -1,3 +1,4 @@
+from collections import OrderedDict
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.routers import DefaultRouter
@@ -79,6 +80,8 @@ class KanbanColumnSerializer(HyperlinkedModelSerializer):
     project = PrimaryKeyRelatedField(queryset=models.Project.objects.all())
 
     def get_cards(self, column):
+        if isinstance(column, OrderedDict):
+            column = column.get('id')
         queryset = models.Card.objects.filter(kanban_column=column, is_archived=False)
         serializer = CardSerializer(instance=queryset, many=True)
         return serializer.data
