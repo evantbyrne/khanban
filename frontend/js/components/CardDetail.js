@@ -103,7 +103,7 @@ class CardDetail extends React.Component {
     const mutate = this.mutate.bind(this);
 
     return (
-      <div className="CardDetail">
+      <form className="CardDetail" onSubmit={this.onEdit}>
         {(!this.state.is_editing && (
           <div>
             <label className="CardDetail_revisions">
@@ -125,6 +125,7 @@ class CardDetail extends React.Component {
           </div>
         )) || (
           <input className={`CardDetail_field ${this.state.title_error ? '-error' : ''}`}
+            name="title"
             onChange={(e) => mutate(e, 'title')}
             placeholder="Title..."
             value={this.state.title} />
@@ -136,6 +137,7 @@ class CardDetail extends React.Component {
         )}
         {this.state.is_editing && (
           <textarea className="CardDetail_field -text"
+            name="description"
             onChange={(e) => mutate(e, 'description')}
             placeholder="Description..."
             value={this.state.description} />
@@ -156,19 +158,25 @@ class CardDetail extends React.Component {
           <React.Fragment>
             <button className="CardDetail_button"
               disabled={this.props.is_saving}
+              name="edit"
               onClick={this.onEdit}>Edit Card</button>
             <button className="CardDetail_button -secondary"
               disabled={this.props.is_saving}
+              name="archive"
               onClick={this.onArchive}>Archive Card</button>
           </React.Fragment>
         )}
         {!is_loading && is_latest_revision && (
           <React.Fragment>
-            <button className="CardDetail_button" onClick={this.onSave}>Save</button>
-            <button className="CardDetail_button -secondary" onClick={this.onCancel}>Cancel</button>
+            <button className="CardDetail_button"
+              name="save"
+              onClick={this.onSave}>Save</button>
+            <button className="CardDetail_button -secondary"
+              name="cancel"
+              onClick={this.onCancel}>Cancel</button>
           </React.Fragment>
         )}
-      </div>
+      </form>
     );
   }
 }

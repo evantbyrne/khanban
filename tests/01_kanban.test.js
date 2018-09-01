@@ -60,7 +60,27 @@ describe("Kanban", function() {
     await page.click("#KanbanCard_1 a");
 
     await page.waitForSelector(".CardDetail");
+    expect(page.url()).to.be("http://localhost:8000/card/1");
     expect(await page.$eval(".CardDetail_title", node => node.innerText.replace(/\s+/g, " "))).to.be("#1 Hello, World");
     expect(await page.$eval(".CardDetail_description", node => node.innerText)).to.be("The quick brown fox jumps over the lazy dog.");
+  });
+
+  /**
+   * Edit Card
+   */
+  it("we should be able to edit cards", async function() {
+    expect(page.url()).to.be("http://localhost:8000/card/1");
+    expect(await page.$$eval(".CardDetail_revisions-select option", nodes => nodes.length)).to.be(2);
+
+    await page.click('.CardDetail_button[name="edit"]');
+    await page.waitForSelector('.CardDetail_field[name="title"]');
+    await page.type('.CardDetail_field[name="title"]', "!");
+    await page.type('.CardDetail_field[name="description"]', " Another one.");
+    await page.click('.CardDetail_button[name="save"]');
+
+    return page.waitForFunction("document.querySelectorAll('.CardDetail_revisions-select option').length === 3");
+    expect(await page.$eval(".CardDetail_title", node => node.innerText.replace(/\s+/g, " "))).to.be("#1 Hello, World!");
+    expect(await page.$eval(".CardDetail_description", node => node.innerText)).to.be("The quick brown fox jumps over the lazy dog. Another one.");
+    expect(await page.$eval("#KanbanCard_1 a", node => node.innerText)).to.be("Hello, World!");
   });
 });
