@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { Provider } from "react-redux";
 import Header from './components/Header.js';
 import Kanban from './components/Kanban.js';
+import Loading from './components/Loading.js';
 import Login from './components/Login.js';
 import history from './history'
 import { store } from "./store";
@@ -24,6 +25,7 @@ const KanbanView = ({ match }) => (
       kanban_column_id={match.params.kanban_column_id || null}
       path={match.path}
     />
+    <Loading />
   </div>
 );
 
