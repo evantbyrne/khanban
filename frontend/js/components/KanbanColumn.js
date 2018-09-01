@@ -37,9 +37,10 @@ class KanbanColumn extends React.Component {
                           {...provided.dragHandleProps}
                           {...provided.draggableProps}
                           className="KanbanColumn_ticket"
+                          id={`KanbanCard_${card.id}`}
                           onClick={(e) => onViewCard(e, card.id)}
                           ref={provided.innerRef}>
-                          #{card.id} <a href="#">{card.card_revisions[0].title}</a>
+                          <span>#{card.id}</span> <a href="#">{card.card_revisions[0].title}</a>
                         </div>
                         {provided.placeholder}
                       </div>

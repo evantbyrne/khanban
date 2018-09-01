@@ -38,12 +38,14 @@ class Login extends React.Component {
     const mutate = this.mutate.bind(this);
 
     return (
-      <div className="Login">
+      <form className="Login" onSubmit={this.onLogin}>
         <input className="Login_field"
+          name="username"
           onChange={(e) => mutate(e, 'username')}
           placeholder="Username..."
           value={this.state.username} />
         <input className="Login_field"
+          name="password"
           onChange={(e) => mutate(e, 'password')}
           placeholder="Password..."
           type="password"
@@ -51,7 +53,7 @@ class Login extends React.Component {
         <button className="Login_button"
           disabled={false}
           onClick={this.onLogin}>Log In</button>
-      </div>
+      </form>
     );
   }
 }
