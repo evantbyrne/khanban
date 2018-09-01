@@ -41,7 +41,7 @@ describe("Kanban", function() {
     expect(page.url()).to.be("http://localhost:8000/auth/login");
     await page.type('.Login_field[name="username"]', "test");
     await page.type('.Login_field[name="password"]', "asdasd123");
-    await page.click('.Login_button');
+    await page.click(".Login_button");
 
     await waitForLoadStart(page);
     await waitForLoadEnd(page);
@@ -57,5 +57,10 @@ describe("Kanban", function() {
     await page.waitForSelector(".KanbanColumn_ticket");
     expect(await page.$eval("#KanbanCard_1 span", node => node.innerText)).to.be("#1");
     expect(await page.$eval("#KanbanCard_1 a", node => node.innerText)).to.be("Hello, World");
+    await page.click("#KanbanCard_1 a");
+
+    await page.waitForSelector(".CardDetail");
+    expect(await page.$eval(".CardDetail_title", node => node.innerText.replace(/\s+/g, " "))).to.be("#1 Hello, World");
+    expect(await page.$eval(".CardDetail_description", node => node.innerText)).to.be("The quick brown fox jumps over the lazy dog.");
   });
 });
