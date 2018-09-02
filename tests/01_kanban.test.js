@@ -181,6 +181,7 @@ describe("Kanban", function() {
     await page.waitForSelector("#KanbanCard_1", {
       hidden: true
     });
+    expect(page.url()).to.be("http://localhost:8000/");
     expect(await page.$$eval(".KanbanColumn_ticket", nodes => nodes.length)).to.be(1);
   });
 });
