@@ -35,3 +35,12 @@ The wrath of Kanban.
 - Install dependencies: `npm install`
 - Compile assets for local debugging: `npm run dev`
 - Compile assets for production: `npm run prod`
+
+
+### Testing
+
+- Use a freshly migrated database with the initial_data fixure loaded.
+- Create a super user.
+    - username: `test`
+    - password: `asdasd123`
+- Run tests: `npm run test`
