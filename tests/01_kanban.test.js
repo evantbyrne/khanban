@@ -122,6 +122,7 @@ describe("Kanban", function() {
     await page.click('.CardDetail_button[name="save"]');
 
     await page.waitForSelector(".KanbanColumn:nth-child(2) #KanbanCard_2");
+    expect(await page.$$eval(".KanbanColumn_ticket", nodes => nodes.length)).to.be(2);
     expect(await page.$$eval(".KanbanColumn:nth-child(1) .KanbanColumn_ticket", nodes => nodes.length)).to.be(1);
     expect(await page.$$eval(".KanbanColumn:nth-child(2) .KanbanColumn_ticket", nodes => nodes.length)).to.be(1);
 
@@ -132,5 +133,35 @@ describe("Kanban", function() {
     expect(await page.$eval(".CardDetail_description", node => node.innerText)).to.be("The description.");
     expect(await page.$eval("#KanbanCard_2 span", node => node.innerText)).to.be("#2");
     expect(await page.$eval("#KanbanCard_2 a", node => node.innerText)).to.be("New Card");
+  });
+
+  /**
+   * Move Card
+   */
+  it("we should be able to move cards", async function() {
+    expect(page.url()).to.be("http://localhost:8000/card/2");
+    expect(await page.$$eval(".KanbanColumn_ticket", nodes => nodes.length)).to.be(2);
+    expect(await page.$$eval(".KanbanColumn:nth-child(1) .KanbanColumn_ticket", nodes => nodes.length)).to.be(1);
+    expect(await page.$$eval(".KanbanColumn:nth-child(2) .KanbanColumn_ticket", nodes => nodes.length)).to.be(1);
+
+    await page.evaluate(() => {
+      document.querySelector(".Kanban_container").scrollTo(0, 0);
+    });
+    const card = await page.$("#KanbanCard_2");
+    const card_box = await card.boundingBox();
+    const drop = await page.$(".KanbanColumn:nth-child(1) .KanbanColumn_container")
+    const drop_box = await drop.boundingBox();
+    await page.mouse.move(card_box.x + (card_box.width / 2), card_box.y + (card_box.height / 2));
+    await page.mouse.down();
+    await page.waitFor(100);
+    await page.mouse.move(drop_box.x + (drop_box.width / 2), drop_box.y + (drop_box.height / 2), { steps: 10 });
+    await page.waitFor(100);
+    await page.mouse.up();
+
+    await waitForLoadStart(page);
+    await waitForLoadEnd(page);
+    expect(await page.$$eval(".KanbanColumn_ticket", nodes => nodes.length)).to.be(2);
+    expect(await page.$$eval(".KanbanColumn:nth-child(1) .KanbanColumn_ticket", nodes => nodes.length)).to.be(2);
+    expect(await page.$$eval(".KanbanColumn:nth-child(2) .KanbanColumn_ticket", nodes => nodes.length)).to.be(0);
   });
 });
