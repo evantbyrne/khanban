@@ -164,4 +164,23 @@ describe("Kanban", function() {
     expect(await page.$$eval(".KanbanColumn:nth-child(1) .KanbanColumn_ticket", nodes => nodes.length)).to.be(2);
     expect(await page.$$eval(".KanbanColumn:nth-child(2) .KanbanColumn_ticket", nodes => nodes.length)).to.be(0);
   });
+
+  /**
+   * Archive Card
+   */
+  it("we should be able to archive cards", async function() {
+    expect(page.url()).to.be("http://localhost:8000/card/2");
+    expect(await page.$$eval(".KanbanColumn_ticket", nodes => nodes.length)).to.be(2);
+
+    await page.click("#KanbanCard_1 a");
+    await page.waitForFunction("document.querySelectorAll('.CardDetail_revisions-select option').length === 3");
+    await page.click('.CardDetail_button[name="archive"]');
+    await page.waitForSelector(".CardDetail", {
+      hidden: true
+    });
+    await page.waitForSelector("#KanbanCard_1", {
+      hidden: true
+    });
+    expect(await page.$$eval(".KanbanColumn_ticket", nodes => nodes.length)).to.be(1);
+  });
 });
