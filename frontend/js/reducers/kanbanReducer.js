@@ -1,3 +1,5 @@
+import Cookies from "js-cookie";
+
 const initialState = {
   current_card: null,
   current_card_revision: null,
@@ -6,7 +8,7 @@ const initialState = {
   is_loading: true,
   is_detail_saving: false,
   kanban_columns: [],
-  token: null
+  token: Cookies.get("token", null)
 };
 
 export default function kanbanReducer(state = initialState, action) {
@@ -218,6 +220,7 @@ export default function kanbanReducer(state = initialState, action) {
 
     case "LOGIN_SUCCESS":
       return (function() {
+        Cookies.set("token", action.json.token)
         return Object.assign({}, state, {
           is_loading: false,
           token: action.json.token
