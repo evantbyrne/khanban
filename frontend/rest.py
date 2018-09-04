@@ -1,9 +1,11 @@
 from collections import OrderedDict
 from django.contrib.auth.models import User
+from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.routers import DefaultRouter
 from rest_framework.serializers import HyperlinkedModelSerializer, PrimaryKeyRelatedField, SerializerMethodField
+from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from . import models
 
@@ -213,6 +215,12 @@ class KanbanColumnViewSet(ModelViewSet):
 class ProjectViewSet(ModelViewSet):
     queryset = models.Project.objects.all()
     serializer_class = ProjectSerializer
+
+
+class LogoutView(APIView):
+    def get(self, request, format=None):
+        request.user.auth_token.delete()
+        return Response(status=status.HTTP_200_OK)
 
 
 router = DefaultRouter()

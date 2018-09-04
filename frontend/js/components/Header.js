@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import ContextMenu from './ContextMenu';
 import ContextMenuLink from './ContextMenuLink';
+import { load } from '../actions/kanbanActions';
 
 class Header extends React.Component {
   state = {
@@ -19,12 +20,11 @@ class Header extends React.Component {
 
   onLogOut = (event) => {
     event.preventDefault();
-    Cookies.remove("token");
-    window.location.href = "/";
+    this.props.logOut(this.props.token);
   };
 
   render() {
-    if (this.props.is_loading || !this.props.user) {
+    if (!this.props.user) {
       return null;
     }
 
@@ -55,11 +55,29 @@ function mapStateToProps(state, ownProps) {
   return {
     is_loading: state.kanban.is_loading,
     title: state.kanban.title,
+    token: state.kanban.token,
     user: state.kanban.user
   };
 }
 
+function mapDispatchToProps(dispatch) {
+  return {
+    logOut: function(token) {
+      dispatch(
+        load(
+          token,
+          "get",
+          "/auth/logout/?format=json",
+          "LOGOUT_BEGIN",
+          "LOGOUT_SUCCESS",
+          "LOAD_KANBAN_ERROR"
+        )
+      );
+    }
+  }
+}
+
 export default connect(
   mapStateToProps,
-  null
+  mapDispatchToProps
 )(Header);

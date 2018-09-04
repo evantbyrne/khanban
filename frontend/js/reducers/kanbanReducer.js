@@ -224,11 +224,17 @@ export default function kanbanReducer(state = initialState, action) {
 
     case "LOGIN_SUCCESS":
       return (function() {
-        Cookies.set("token", action.json.token)
+        Cookies.set("token", action.json.token);
         return Object.assign({}, state, {
           is_loading: false,
           token: action.json.token
         });
+      })();
+
+    case "LOGOUT_SUCCESS":
+      return (function() {
+        Cookies.remove("token");
+        window.location.href = "/";
       })();
 
     case "ORDER_KANBAN_SUCCESS":
