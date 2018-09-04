@@ -55,6 +55,8 @@ describe("Kanban", function() {
     expect(page.url()).to.be("http://localhost:8000/");
 
     await page.waitForSelector(".KanbanColumn_ticket");
+    expect(await page.$eval("#HeaderNav_user u", node => node.innerText)).to.be("test");
+    expect(await page.$eval("#HeaderNav_project", node => node.innerText)).to.be("Khanban");
     expect(await page.$$eval(".KanbanColumn_ticket", nodes => nodes.length)).to.be(1);
     expect(await page.$eval("#KanbanCard_1 span", node => node.innerText)).to.be("#1");
     expect(await page.$eval("#KanbanCard_1 a", node => node.innerText)).to.be("Hello, World");
@@ -183,5 +185,18 @@ describe("Kanban", function() {
     });
     expect(page.url()).to.be("http://localhost:8000/");
     expect(await page.$$eval(".KanbanColumn_ticket", nodes => nodes.length)).to.be(1);
+  });
+
+  /**
+   * Log Out
+   */
+  it("we should be able to log out", async function() {
+    expect(page.url()).to.be("http://localhost:8000/");
+
+    await page.click("#HeaderNav_user");
+    await page.waitForSelector("#ContextMenu_logout");
+    await page.click("#ContextMenu_logout");
+    await page.waitForSelector(".Login");
+    expect(page.url()).to.be("http://localhost:8000/auth/login");
   });
 });

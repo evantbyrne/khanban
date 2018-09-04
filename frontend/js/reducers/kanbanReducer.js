@@ -8,7 +8,9 @@ const initialState = {
   is_loading: true,
   is_detail_saving: false,
   kanban_columns: [],
-  token: Cookies.get("token", null)
+  title: null,
+  token: Cookies.get("token", null),
+  user: null
 };
 
 export default function kanbanReducer(state = initialState, action) {
@@ -191,7 +193,9 @@ export default function kanbanReducer(state = initialState, action) {
       return (function() {
         return Object.assign({}, state, {
           is_loading: false,
-          kanban_columns: action.json.kanban_columns
+          kanban_columns: action.json.kanban_columns,
+          title: action.json.title,
+          user: action.json.user
         });
       })();
 

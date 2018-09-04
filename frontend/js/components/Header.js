@@ -1,32 +1,65 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import Cookies from "js-cookie";
+import React from "react";
+import { connect } from "react-redux";
+import { Link } from "react-router-dom";
+import ContextMenu from './ContextMenu';
+import ContextMenuLink from './ContextMenuLink';
 
 class Header extends React.Component {
+  state = {
+    is_context_menu: false
+  };
+
+  onContextMenu = (event) => {
+    event.preventDefault();
+    this.setState({
+      is_context_menu: !this.state.is_context_menu
+    });
+  };
+
+  onLogOut = (event) => {
+    event.preventDefault();
+    Cookies.remove("token");
+    window.location.href = "/";
+  };
+
   render() {
+    if (this.props.is_loading || !this.props.user) {
+      return null;
+    }
+
     return (
       <header className="Header">
         <nav className="Header_nav">
-          <a className="Header_nav-link" href="#">Dashboard</a> /
-          <a className="Header_nav-link" href="#">Foobar</a> /
-          <a className="Header_nav-link" href="#">Kanban</a>
-          <a className="Header_nav-link-right" href="#">
-            <u>evantbyrne</u> <span>↓</span>
+          <Link className="Header_nav-link" id="HeaderNav_dashboard" to="/">Dashboard</Link> /
+          <Link className="Header_nav-link" id="HeaderNav_project" to="/">{this.props.title}</Link> /
+          <Link className="Header_nav-link" id="HeaderNav_kanban" to="/">Kanban</Link>
+          <a className="Header_nav-link-right"
+            id="HeaderNav_user"
+            href="#"
+            onClick={this.onContextMenu}>
+            <u>{this.props.user.username}</u> <span>{this.state.is_context_menu ? "↑" : "↓"}</span>
           </a>
         </nav>
+        {this.state.is_context_menu && (
+          <ContextMenu right={20} top={30}>
+            <ContextMenuLink id="ContextMenu_logout" onClick={this.onLogOut}>Log Out</ContextMenuLink>
+          </ContextMenu>
+        )}
       </header>
     );
   }
 }
 
 function mapStateToProps(state, ownProps) {
-  return {};
-}
-
-function mapDispatchToProps(dispatch) {
-  return {};
+  return {
+    is_loading: state.kanban.is_loading,
+    title: state.kanban.title,
+    user: state.kanban.user
+  };
 }
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  null
 )(Header);

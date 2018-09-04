@@ -1,4 +1,5 @@
 from collections import OrderedDict
+from django.contrib.auth.models import User
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.routers import DefaultRouter
@@ -118,15 +119,26 @@ class KanbanColumnSerializer(HyperlinkedModelSerializer):
 
 class KanbanSerializer(HyperlinkedModelSerializer):
     kanban_columns = KanbanColumnSerializer(many=True)
+    user = SerializerMethodField()
+
+    def get_user(self, kanban):
+        return UserSerializer(instance=self.context['request'].user).data
 
     class Meta:
         model = models.Project
         fields = (
             'id',
             'kanban_columns',
+            'slug',
+            'title',
+            'user',
         )
         read_only_fields = (
             'id',
+            'kanban_columns',
+            'slug',
+            'title',
+            'user',
         ),
 
 
@@ -149,6 +161,20 @@ class ProjectSerializer(HyperlinkedModelSerializer):
         )
         project.save()
         return project
+
+
+class UserSerializer(HyperlinkedModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            'email',
+            'id',
+            'username',
+        )
+        read_only_fields = (
+            'id',
+            'username',
+        ),
 
 
 class CardViewSet(ModelViewSet):

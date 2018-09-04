@@ -1,0 +1,16 @@
+.ContextMenu {
+  background: white;
+  border: 2px solid black;
+  padding: 10px;
+  position: absolute;
+  width: 150px;
+
+  &_link {
+    display: block;
+    margin-bottom: 5px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
