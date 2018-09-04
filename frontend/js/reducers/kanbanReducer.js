@@ -182,6 +182,7 @@ export default function kanbanReducer(state = initialState, action) {
 
     case "LOAD_KANBAN_ERROR":
       return (function() {
+        alert(action.error);
         console.log("ERROR", action.error);
         return Object.assign({}, state, {
           error: action.error,

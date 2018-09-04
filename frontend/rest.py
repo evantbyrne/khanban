@@ -119,6 +119,21 @@ class KanbanColumnSerializer(HyperlinkedModelSerializer):
         return kanban_column
 
 
+class KanbanOrderSerializer(HyperlinkedModelSerializer):
+    kanban_columns = KanbanColumnSerializer(many=True)
+
+    class Meta:
+        model = models.Project
+        fields = (
+            'id',
+            'kanban_columns',
+        )
+        read_only_fields = (
+            'id',
+            'kanban_columns',
+        )
+
+
 class KanbanSerializer(HyperlinkedModelSerializer):
     kanban_columns = KanbanColumnSerializer(many=True)
     user = SerializerMethodField()
@@ -141,7 +156,7 @@ class KanbanSerializer(HyperlinkedModelSerializer):
             'slug',
             'title',
             'user',
-        ),
+        )
 
 
 class ProjectSerializer(HyperlinkedModelSerializer):
@@ -191,7 +206,7 @@ class KanbanViewSet(ModelViewSet):
     @action(methods=['put'], detail=True)
     def order(self, request, pk=None, format='json'):
         project = self.get_object()
-        serializer = KanbanSerializer(data=request.data)
+        serializer = KanbanOrderSerializer(data=request.data)
         if serializer.is_valid():
             for kanban_column in request.data.get('kanban_columns', []):
                 i = 0
