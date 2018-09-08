@@ -36,6 +36,13 @@ export function cardMove(source, destination) {
   };
 };
 
+export function isLoading(is_loading) {
+  return {
+    is_loading,
+    type: 'IS_LOADING',
+  };
+};
+
 export function load(token, method, url, type_begin, type_success, type_error, data = {}) {
   let params = {
     data,

@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { load, viewIndex } from '../actions/kanbanActions';
+import { isLoading, load, viewIndex } from '../actions/kanbanActions';
 
 class Login extends React.Component {
   state = {
@@ -20,7 +20,11 @@ class Login extends React.Component {
     this.setState({
       password: "",
       username: "",
-    })
+    });
+
+    if (this.props.is_loading) {
+      this.props.onIsLoading(false);
+    }
   }
 
   mutate(event, key) {
@@ -60,12 +64,15 @@ class Login extends React.Component {
 
 function mapStateToProps(state, ownProps) {
   return {
+    is_loading: state.kanban.is_loading,
     token: state.kanban.token
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
+    onIsLoading: (is_loading) => dispatch(isLoading(is_loading)),
+
     onLogin: (username, password) => {
       const data = {
         username,

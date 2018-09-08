@@ -48,6 +48,7 @@ export default function kanbanReducer(state = initialState, action) {
           current_card: null,
           current_card_revision: null,
           is_detail_saving: false,
+          is_loading: false,
           kanban_columns
         });
       })();
@@ -84,6 +85,7 @@ export default function kanbanReducer(state = initialState, action) {
     case "CARD_CREATE_BEGIN":
       return (function() {
         return Object.assign({}, state, {
+          is_loading: true,
           is_detail_saving: true
         });
       })();
@@ -93,7 +95,8 @@ export default function kanbanReducer(state = initialState, action) {
         console.log("ERROR", action.error);
         return Object.assign({}, state, {
           error: action.error,
-          is_detail_saving: false
+          is_detail_saving: false,
+          is_loading: false
         });
       })();
 
@@ -111,6 +114,7 @@ export default function kanbanReducer(state = initialState, action) {
         return Object.assign({}, state, {
           current_card: null,
           is_detail_saving: false,
+          is_loading: false,
           kanban_columns
         });
       })();
@@ -139,7 +143,8 @@ export default function kanbanReducer(state = initialState, action) {
     case "CARD_UPDATE_BEGIN":
       return (function() {
         return Object.assign({}, state, {
-          is_detail_saving: true
+          is_detail_saving: true,
+          is_loading: true
         });
       })();
 
@@ -148,7 +153,8 @@ export default function kanbanReducer(state = initialState, action) {
         console.log("ERROR", action.error);
         return Object.assign({}, state, {
           error: action.error,
-          is_detail_saving: false
+          is_detail_saving: false,
+          is_loading: false
         });
       })();
 
@@ -169,7 +175,15 @@ export default function kanbanReducer(state = initialState, action) {
         return Object.assign({}, state, {
           current_card: state.current_card ? current_card : null,
           is_detail_saving: false,
+          is_loading: false,
           kanban_columns
+        });
+      })();
+
+    case "IS_LOADING":
+      return (function() {
+        return Object.assign({}, state, {
+          is_loading: action.is_loading
         });
       })();
 

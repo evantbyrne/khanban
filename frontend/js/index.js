@@ -25,20 +25,22 @@ const KanbanView = ({ match }) => (
       kanban_column_id={match.params.kanban_column_id || null}
       path={match.path}
     />
-    <Loading />
   </div>
 );
 
 const app = (
   <Router history={history}>
     <Provider store={store}>
-      <Switch>
-        <Route exact path='/' component={KanbanView}/>
-        <Route exact path='/add/:kanban_column_id' component={KanbanView}/>
-        <Route exact path='/card/:card_id' component={KanbanView}/>
-        <Route exact path='/card/:card_id/revision/:card_revision_id' component={KanbanView}/>
-        <Route path='/auth/login' component={AuthView}/>
-      </Switch>
+      <React.Fragment>
+        <Switch>
+          <Route exact path='/' component={KanbanView}/>
+          <Route exact path='/add/:kanban_column_id' component={KanbanView}/>
+          <Route exact path='/card/:card_id' component={KanbanView}/>
+          <Route exact path='/card/:card_id/revision/:card_revision_id' component={KanbanView}/>
+          <Route path='/auth/login' component={AuthView}/>
+        </Switch>
+        <Loading />
+      </React.Fragment>
     </Provider>
   </Router>
 );

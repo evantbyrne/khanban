@@ -81,6 +81,8 @@ describe("Kanban", function() {
     await page.type('.CardDetail_field[name="description"]', " Another one.");
     await page.click('.CardDetail_button[name="save"]');
 
+    await waitForLoadStart(page);
+    await waitForLoadEnd(page);
     await page.waitForFunction("document.querySelectorAll('.CardDetail_revisions-select option').length === 3");
     expect(await page.$eval(".CardDetail_title", node => node.innerText.replace(/\s+/g, " "))).to.be("#1 Hello, World!");
     expect(await page.$eval(".CardDetail_description", node => node.innerText)).to.be("The quick brown fox jumps over the lazy dog. Another one.");
@@ -123,6 +125,8 @@ describe("Kanban", function() {
     await page.type('.CardDetail_field[name="description"]', "The description.");
     await page.click('.CardDetail_button[name="save"]');
 
+    await waitForLoadStart(page);
+    await waitForLoadEnd(page);
     await page.waitForSelector(".KanbanColumn:nth-child(2) #KanbanCard_2");
     expect(await page.$$eval(".KanbanColumn_ticket", nodes => nodes.length)).to.be(2);
     expect(await page.$$eval(".KanbanColumn:nth-child(1) .KanbanColumn_ticket", nodes => nodes.length)).to.be(1);
@@ -177,6 +181,9 @@ describe("Kanban", function() {
     await page.click("#KanbanCard_1 a");
     await page.waitForFunction("document.querySelectorAll('.CardDetail_revisions-select option').length === 3");
     await page.click('.CardDetail_button[name="archive"]');
+
+    await waitForLoadStart(page);
+    await waitForLoadEnd(page);
     await page.waitForSelector(".CardDetail", {
       hidden: true
     });
