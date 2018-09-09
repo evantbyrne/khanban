@@ -236,6 +236,13 @@ class ProjectViewSet(ModelViewSet):
     serializer_class = ProjectSerializer
 
 
+class AuthUserView(APIView):
+    def get(self, request, format=None):
+        if not request.user:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        return Response(UserSerializer(instance=request.user).data)
+
+
 class LogoutView(APIView):
     def get(self, request, format=None):
         request.user.auth_token.delete()

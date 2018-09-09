@@ -7,6 +7,14 @@ import ContextMenuLink from './ContextMenuLink';
 import { load } from '../actions/kanbanActions';
 
 class Header extends React.Component {
+  static getDerivedStateFromProps(props, state) {
+    if (!props.is_loading && !props.user && props.token) {
+      props.loadUser(props.token);
+    }
+
+    return state;
+  }
+
   state = {
     is_context_menu: false
   };
@@ -64,6 +72,19 @@ function mapStateToProps(state, ownProps) {
 
 function mapDispatchToProps(dispatch) {
   return {
+    loadUser: function(token) {
+      dispatch(
+        load(
+          token,
+          "get",
+          "/auth/user/?format=json",
+          "LOAD_USER_BEGIN",
+          "LOAD_USER_SUCCESS",
+          "LOAD_KANBAN_ERROR"
+        )
+      );
+    },
+
     logOut: function(token) {
       dispatch(
         load(

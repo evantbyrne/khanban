@@ -232,6 +232,22 @@ export default function kanbanReducer(state = initialState, action) {
         });
       })();
 
+    case "LOAD_USER_BEGIN":
+      return (function() {
+        return Object.assign({}, state, {
+          is_loading: true,
+          user: null
+        });
+      })();
+
+    case "LOAD_USER_SUCCESS":
+      return (function() {
+        return Object.assign({}, state, {
+          is_loading: false,
+          user: action.json
+        });
+      })();
+
     case "LOGIN_BEGIN":
       return (function() {
         return Object.assign({}, state, {
