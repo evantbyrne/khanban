@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { isLoading, load, viewIndex } from '../actions/kanbanActions';
+import { isLoading, load, viewDashboard } from '../actions/kanbanActions';
 
 class Login extends React.Component {
   state = {
@@ -10,7 +10,7 @@ class Login extends React.Component {
 
   static getDerivedStateFromProps(props, state) {
     if (props.token) {
-      props.viewIndex();
+      props.viewDashboard();
     }
 
     return state;
@@ -91,7 +91,7 @@ function mapDispatchToProps(dispatch) {
       );
     },
 
-    viewIndex: () => dispatch(viewIndex())
+    viewDashboard: () => dispatch(viewDashboard())
   };
 }
 

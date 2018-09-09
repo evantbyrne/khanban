@@ -8,6 +8,8 @@ const initialState = {
   is_loading: true,
   is_detail_saving: false,
   kanban_columns: [],
+  projects: [],
+  slug: null,
   title: null,
   token: Cookies.get("token", null),
   user: null
@@ -214,6 +216,22 @@ export default function kanbanReducer(state = initialState, action) {
         });
       })();
 
+    case "LOAD_PROJECTS_BEGIN":
+      return (function() {
+        return Object.assign({}, state, {
+          is_loading: true,
+          projects: []
+        });
+      })();
+
+    case "LOAD_PROJECTS_SUCCESS":
+      return (function() {
+        return Object.assign({}, state, {
+          is_loading: false,
+          projects: action.json
+        });
+      })();
+
     case "LOGIN_BEGIN":
       return (function() {
         return Object.assign({}, state, {
@@ -256,6 +274,13 @@ export default function kanbanReducer(state = initialState, action) {
       return (function() {
         return Object.assign({}, state, {
           is_loading: false
+        });
+      })();
+
+    case "PROJECT_SLUG":
+      return (function() {
+        return Object.assign({}, state, {
+          slug: action.slug
         });
       })();
 

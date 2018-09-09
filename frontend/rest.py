@@ -142,6 +142,7 @@ class KanbanSerializer(HyperlinkedModelSerializer):
         return UserSerializer(instance=self.context['request'].user).data
 
     class Meta:
+        lookup_field = 'slug'
         model = models.Project
         fields = (
             'id',
@@ -166,6 +167,7 @@ class ProjectSerializer(HyperlinkedModelSerializer):
             'slug',
             'title',
         )
+        lookup_field = 'slug'
         model = models.Project
         read_only_fields = (
             'id',
@@ -200,11 +202,12 @@ class CardViewSet(ModelViewSet):
 
 
 class KanbanViewSet(ModelViewSet):
+    lookup_field = 'slug'
     queryset = models.Project.objects.all()
     serializer_class = KanbanSerializer
 
     @action(methods=['put'], detail=True)
-    def order(self, request, pk=None, format='json'):
+    def order(self, request, slug=None, format='json'):
         project = self.get_object()
         serializer = KanbanOrderSerializer(data=request.data)
         if serializer.is_valid():
@@ -228,6 +231,7 @@ class KanbanColumnViewSet(ModelViewSet):
 
 
 class ProjectViewSet(ModelViewSet):
+    lookup_field = 'slug'
     queryset = models.Project.objects.all()
     serializer_class = ProjectSerializer
 

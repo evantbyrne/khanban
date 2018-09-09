@@ -34,11 +34,11 @@ describe("Kanban", function() {
    * Log In
    */
   it("we should be able to log in", async function() {
-    const response = await page.goto("http://localhost:8000");
+    const response = await page.goto("http://localhost:8000/auth/login");
     expect(response.status()).to.be(200);
 
     await page.waitForSelector(".Login");
-    expect(page.url()).to.be("http://localhost:8000/auth/login");
+    expect(page.url()).to.be("http://localhost:8000/auth/login/");
     await page.type('.Login_field[name="username"]', "test");
     await page.type('.Login_field[name="password"]', "asdasd123");
     await page.click(".Login_button");
@@ -49,10 +49,22 @@ describe("Kanban", function() {
   });
 
   /**
+   * View Kanban
+   */
+  it("we should be able to view kanbans", async function() {
+    expect(page.url()).to.be("http://localhost:8000/");
+    await page.waitForSelector("#Project_khanban a");
+    await page.click("#Project_khanban a");
+    await waitForLoadStart(page);
+    await waitForLoadEnd(page);
+    expect(page.url()).to.be("http://localhost:8000/khanban");
+  });
+
+  /**
    * View Card
    */
   it("we should be able to view cards", async function() {
-    expect(page.url()).to.be("http://localhost:8000/");
+    expect(page.url()).to.be("http://localhost:8000/khanban");
 
     await page.waitForSelector(".KanbanColumn_ticket");
     expect(await page.$eval("#HeaderNav_user u", node => node.innerText)).to.be("test");
@@ -63,7 +75,7 @@ describe("Kanban", function() {
     await page.click("#KanbanCard_1 a");
 
     await page.waitForSelector(".CardDetail");
-    expect(page.url()).to.be("http://localhost:8000/card/1");
+    expect(page.url()).to.be("http://localhost:8000/khanban/card/1");
     expect(await page.$eval(".CardDetail_title", node => node.innerText.replace(/\s+/g, " "))).to.be("#1 Hello, World");
     expect(await page.$eval(".CardDetail_description", node => node.innerText)).to.be("The quick brown fox jumps over the lazy dog.");
   });
@@ -72,7 +84,7 @@ describe("Kanban", function() {
    * Edit Card
    */
   it("we should be able to edit cards", async function() {
-    expect(page.url()).to.be("http://localhost:8000/card/1");
+    expect(page.url()).to.be("http://localhost:8000/khanban/card/1");
     expect(await page.$$eval(".CardDetail_revisions-select option", nodes => nodes.length)).to.be(2);
 
     await page.click('.CardDetail_button[name="edit"]');
@@ -93,7 +105,7 @@ describe("Kanban", function() {
    * View Card Revision
    */
   it("we should be able to view card revisions", async function() {
-    expect(page.url()).to.be("http://localhost:8000/card/1");
+    expect(page.url()).to.be("http://localhost:8000/khanban/card/1");
     expect(await page.$$eval(".CardDetail_revisions-select option", nodes => nodes.length)).to.be(3);
 
     let revision = await page.$eval(".CardDetail_revisions-select option:last-child", node => node.getAttribute("value"));
@@ -101,14 +113,14 @@ describe("Kanban", function() {
     await page.waitForSelector('.CardDetail_button[name="edit"]', {
       hidden: true
     });
-    expect(page.url()).to.be("http://localhost:8000/card/1/revision/1");
+    expect(page.url()).to.be("http://localhost:8000/khanban/card/1/revision/1");
     expect(await page.$eval(".CardDetail_title", node => node.innerText.replace(/\s+/g, " "))).to.be("#1 Initial Title");
     expect(await page.$eval(".CardDetail_description", node => node.innerText)).to.be("Initial description.");
 
     revision = await page.$eval(".CardDetail_revisions-select option:first-child", node => node.getAttribute("value"));
     await page.select(".CardDetail_revisions-select", revision);
     await page.waitForSelector('.CardDetail_button[name="edit"]');
-    expect(page.url()).to.be("http://localhost:8000/card/1/revision/3");
+    expect(page.url()).to.be("http://localhost:8000/khanban/card/1/revision/3");
     expect(await page.$eval(".CardDetail_title", node => node.innerText.replace(/\s+/g, " "))).to.be("#1 Hello, World!");
     expect(await page.$eval(".CardDetail_description", node => node.innerText)).to.be("The quick brown fox jumps over the lazy dog. Another one.");
   });
@@ -117,7 +129,7 @@ describe("Kanban", function() {
    * Add Card
    */
   it("we should be able to add cards", async function() {
-    expect(page.url()).to.be("http://localhost:8000/card/1/revision/3");
+    expect(page.url()).to.be("http://localhost:8000/khanban/card/1/revision/3");
 
     await page.click(".KanbanColumn:nth-child(2) .KanbanColumn_header-add");
     await page.waitForSelector('.CardDetail_button[name="save"]');
@@ -134,7 +146,7 @@ describe("Kanban", function() {
 
     await page.click("#KanbanCard_2 a");
     await page.waitForSelector(".CardDetail_title");
-    expect(page.url()).to.be("http://localhost:8000/card/2");
+    expect(page.url()).to.be("http://localhost:8000/khanban/card/2");
     expect(await page.$eval(".CardDetail_title", node => node.innerText.replace(/\s+/g, " "))).to.be("#2 New Card");
     expect(await page.$eval(".CardDetail_description", node => node.innerText)).to.be("The description.");
     expect(await page.$eval("#KanbanCard_2 span", node => node.innerText)).to.be("#2");
@@ -145,7 +157,7 @@ describe("Kanban", function() {
    * Move Card
    */
   it("we should be able to move cards", async function() {
-    expect(page.url()).to.be("http://localhost:8000/card/2");
+    expect(page.url()).to.be("http://localhost:8000/khanban/card/2");
     expect(await page.$$eval(".KanbanColumn_ticket", nodes => nodes.length)).to.be(2);
     expect(await page.$$eval(".KanbanColumn:nth-child(1) .KanbanColumn_ticket", nodes => nodes.length)).to.be(1);
     expect(await page.$$eval(".KanbanColumn:nth-child(2) .KanbanColumn_ticket", nodes => nodes.length)).to.be(1);
@@ -175,7 +187,7 @@ describe("Kanban", function() {
    * Archive Card
    */
   it("we should be able to archive cards", async function() {
-    expect(page.url()).to.be("http://localhost:8000/card/2");
+    expect(page.url()).to.be("http://localhost:8000/khanban/card/2");
     expect(await page.$$eval(".KanbanColumn_ticket", nodes => nodes.length)).to.be(2);
 
     await page.click("#KanbanCard_1 a");
@@ -190,7 +202,7 @@ describe("Kanban", function() {
     await page.waitForSelector("#KanbanCard_1", {
       hidden: true
     });
-    expect(page.url()).to.be("http://localhost:8000/");
+    expect(page.url()).to.be("http://localhost:8000/khanban");
     expect(await page.$$eval(".KanbanColumn_ticket", nodes => nodes.length)).to.be(1);
   });
 
@@ -198,7 +210,7 @@ describe("Kanban", function() {
    * Log Out
    */
   it("we should be able to log out", async function() {
-    expect(page.url()).to.be("http://localhost:8000/");
+    expect(page.url()).to.be("http://localhost:8000/khanban");
 
     await page.click("#HeaderNav_user");
     await page.waitForSelector("#ContextMenu_logout");

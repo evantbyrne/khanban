@@ -89,26 +89,40 @@ export function loadError(type, error) {
   };
 }
 
-export function viewCard(id, revision_id = null) {
+export function projectSlug(slug) {
+  return {
+    slug,
+    type: 'PROJECT_SLUG',
+  };
+};
+
+export function viewCard(project_slug, id, revision_id = null) {
   if (revision_id) {
-    history.push(`/card/${id}/revision/${revision_id}`);
+    history.push(`/${project_slug}/card/${id}/revision/${revision_id}`);
   } else {
-    history.push(`/card/${id}`);
+    history.push(`/${project_slug}/card/${id}`);
   }
   return {
     type: 'VIEW_CARD'
   };
 }
 
-export function viewCardAdd(kanban_column_id) {
-  history.push(`/add/${kanban_column_id}`);
+export function viewCardAdd(project_slug, kanban_column_id) {
+  history.push(`/${project_slug}/add/${kanban_column_id}`);
   return {
     type: 'VIEW_CARD_ADD'
   };
 }
 
-export function viewIndex() {
-  history.push('/');
+export function viewDashboard() {
+  history.push("/");
+  return {
+    type: 'VIEW_DASHBOARD'
+  };
+}
+
+export function viewIndex(project_slug) {
+  history.push(`/${project_slug}`);
   return {
     type: 'VIEW_INDEX'
   };

@@ -9,6 +9,7 @@ class KanbanColumn extends React.Component {
     const onViewCard = this.props.onViewCard.bind(this);
     const column = this.props.column;
     const column_index = this.props.index;
+    const project_slug = this.props.project_slug;
 
     return (
       <div className="KanbanColumn">
@@ -17,7 +18,7 @@ class KanbanColumn extends React.Component {
           <a
             className="KanbanColumn_header-add"
             href="#"
-            onClick={(e) => onViewCardAdd(e, column.id)}>+</a>
+            onClick={(e) => onViewCardAdd(e, project_slug, column.id)}>+</a>
         </div>
         <Droppable droppableId={`kanban_column_${column.id}`}>
           {(provided, snapshot) => (
@@ -38,7 +39,7 @@ class KanbanColumn extends React.Component {
                           {...provided.draggableProps}
                           className="KanbanColumn_ticket"
                           id={`KanbanCard_${card.id}`}
-                          onClick={(e) => onViewCard(e, card.id)}
+                          onClick={(e) => onViewCard(e, project_slug, card.id)}
                           ref={provided.innerRef}>
                           <span>#{card.id}</span> <a href="#">{card.card_revisions[0].title}</a>
                         </div>
@@ -60,19 +61,20 @@ function mapStateToProps(state, ownProps) {
   return {
     column: ownProps.column,
     index: ownProps.index,
+    project_slug: state.kanban.slug
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    onViewCard: (event, card_id) => {
+    onViewCard: (event, project_slug, card_id) => {
       event.preventDefault();
-      dispatch(viewCard(card_id));
+      dispatch(viewCard(project_slug, card_id));
     },
 
-    onViewCardAdd: (event, kanban_column) => {
+    onViewCardAdd: (event, project_slug, kanban_column) => {
       event.preventDefault();
-      dispatch(viewCardAdd(kanban_column));
+      dispatch(viewCardAdd(project_slug, kanban_column));
     }
   };
 }

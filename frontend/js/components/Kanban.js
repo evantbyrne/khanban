@@ -3,7 +3,7 @@ import { DragDropContext } from 'react-beautiful-dnd';
 import { connect } from 'react-redux';
 import CardDetail from './CardDetail';
 import KanbanColumn from './KanbanColumn';
-import { cardAdd, cardDetail, cardMove, load } from '../actions/kanbanActions';
+import { cardAdd, cardDetail, cardMove, load, projectSlug } from '../actions/kanbanActions';
 
 class Kanban extends React.Component {
   static getDerivedStateFromProps(props, state) {
@@ -28,7 +28,7 @@ class Kanban extends React.Component {
   state = {};
 
   componentDidMount() {
-    this.props.load(this.props.token, this.props.id);
+    this.props.load(this.props.token, this.props.slug);
   }
 
   onDragEnd(result) {
@@ -37,7 +37,7 @@ class Kanban extends React.Component {
     }
 
     this.props.onCardMove(result.source, result.destination);
-    this.props.onOrder(this.props.token, this.props.id, this.props.columns);
+    this.props.onOrder(this.props.token, this.props.slug, this.props.columns);
   }
 
   render() {
@@ -68,7 +68,6 @@ function mapStateToProps(state, ownProps) {
     columns: state.kanban.kanban_columns,
     current_card: state.kanban.current_card,
     current_card_revision: state.kanban.current_card_revision,
-    id: state.kanban.id,
     is_loading: state.kanban.is_loading,
     token: state.kanban.token
   };
@@ -76,12 +75,13 @@ function mapStateToProps(state, ownProps) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    load: function(token, id) {
+    load: function(token, slug) {
+      dispatch(projectSlug(slug));
       dispatch(
         load(
           token,
           'get',
-          `/api/kanbans/${id}.json`,
+          `/api/kanbans/${slug}.json`,
           "LOAD_KANBAN_BEGIN",
           "LOAD_KANBAN_SUCCESS",
           "LOAD_KANBAN_ERROR"
@@ -101,16 +101,16 @@ function mapDispatchToProps(dispatch) {
       dispatch(cardMove(source, destination));
     },
 
-    onOrder: (token, id, kanban_columns) => {
+    onOrder: (token, slug, kanban_columns) => {
       const data = {
-        id,
-        kanban_columns
+        kanban_columns,
+        slug
       };
       dispatch(
         load(
           token,
           'put',
-          `/api/kanbans/${id}/order.json`,
+          `/api/kanbans/${slug}/order.json`,
           "LOAD_KANBAN_BEGIN",
           "ORDER_KANBAN_SUCCESS",
           "LOAD_KANBAN_ERROR",

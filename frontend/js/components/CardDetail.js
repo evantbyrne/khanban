@@ -37,12 +37,12 @@ class CardDetail extends React.Component {
   onArchive(event) {
     event.preventDefault();
 
-    const { card, card_revision, token } = this.props;
+    const { card, card_revision, project_slug, token } = this.props;
 
     card.description = card_revision.description;
     card.title = card_revision.title;
 
-    this.props.onArchive(token, card);
+    this.props.onArchive(token, project_slug, card);
   }
 
   onCancel(event) {
@@ -53,7 +53,7 @@ class CardDetail extends React.Component {
     });
 
     if (this.props.card.id === null) {
-      this.props.onClose();
+      this.props.onClose(this.props.project_slug);
     }
   }
 
@@ -79,7 +79,7 @@ class CardDetail extends React.Component {
       return;
     }
 
-    const { card, token } = this.props;
+    const { card, project_slug, token } = this.props;
 
     card.description = this.state.description;
     card.title = this.state.title;
@@ -87,12 +87,12 @@ class CardDetail extends React.Component {
     if (this.props.card.id === null) {
       this.props.onCreate(token, card);
     } else {
-      this.props.onUpdate(token, card);
+      this.props.onUpdate(token, project_slug, card);
     }
   }
 
   render() {
-    const { card, card_revision, onViewCard } = this.props;
+    const { card, card_revision, onViewCard, project_slug } = this.props;
 
     if (card === null) {
       return null;
@@ -110,7 +110,7 @@ class CardDetail extends React.Component {
               <span className="CardDetail_revisions-label">Revision: </span>
               <select
                 className="CardDetail_revisions-select"
-                onChange={(e) => onViewCard(card.id, e.target.value)}
+                onChange={(e) => onViewCard(project_slug, card.id, e.target.value)}
                 value={card_revision.id}>
                 {card.card_revisions.map(revision => (
                   <option
@@ -186,15 +186,16 @@ function mapStateToProps(state, ownProps) {
     card: state.kanban.current_card,
     card_revision: state.kanban.current_card_revision,
     is_saving: state.kanban.is_detail_saving,
+    project_slug: state.kanban.slug,
     token: state.kanban.token
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    onArchive: (token, card) => {
+    onArchive: (token, project_slug, card) => {
       card.is_archived = true;
-      dispatch(viewIndex());
+      dispatch(viewIndex(project_slug));
       dispatch(
         load(
           token,
@@ -208,9 +209,9 @@ function mapDispatchToProps(dispatch) {
       );
     },
 
-    onClose: () => {
+    onClose: (project_slug) => {
       dispatch(cardClose());
-      dispatch(viewIndex());
+      dispatch(viewIndex(project_slug));
     },
 
     onCreate: (token, card) => {
@@ -227,8 +228,8 @@ function mapDispatchToProps(dispatch) {
       );
     },
 
-    onUpdate: (token, card) => {
-      dispatch(viewCard(card.id));
+    onUpdate: (token, project_slug, card) => {
+      dispatch(viewCard(project_slug, card.id));
       dispatch(
         load(
           token,
@@ -242,8 +243,8 @@ function mapDispatchToProps(dispatch) {
       );
     },
 
-    onViewCard: (card_id, card_revision_id) => {
-      dispatch(viewCard(card_id, card_revision_id));
+    onViewCard: (project_slug, card_id, card_revision_id) => {
+      dispatch(viewCard(project_slug, card_id, card_revision_id));
     }
   };
 }
