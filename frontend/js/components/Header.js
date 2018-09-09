@@ -32,6 +32,10 @@ class Header extends React.Component {
   };
 
   render() {
+    if (!this.props.token) {
+      return null;
+    }
+
     return (
       <header className="Header">
         <nav className="Header_nav">
