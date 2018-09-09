@@ -24,22 +24,23 @@ class Header extends React.Component {
   };
 
   render() {
-    if (!this.props.user) {
-      return null;
-    }
-
     return (
       <header className="Header">
         <nav className="Header_nav">
-          <Link className="Header_nav-link" id="HeaderNav_dashboard" to="/">Dashboard</Link> /
-          <Link className="Header_nav-link" id="HeaderNav_project" to="/">{this.props.title}</Link> /
-          <Link className="Header_nav-link" id="HeaderNav_kanban" to="/">Kanban</Link>
-          <a className="Header_nav-link-right"
-            id="HeaderNav_user"
-            href="#"
-            onClick={this.onContextMenu}>
-            <u>{this.props.user.username}</u> <span>{this.state.is_context_menu ? "↑" : "↓"}</span>
-          </a>
+          <Link className="Header_nav-link" id="HeaderNav_dashboard" to="/">Dashboard</Link>
+          {this.props.title && (
+            <React.Fragment>
+              / <Link className="Header_nav-link" id="HeaderNav_project" to={`/${this.props.slug}`}>{this.props.title}</Link>
+            </React.Fragment>
+          )}
+          {this.props.user && (
+            <a className="Header_nav-link-right"
+              id="HeaderNav_user"
+              href="#"
+              onClick={this.onContextMenu}>
+              <u>{this.props.user.username}</u> <span>{this.state.is_context_menu ? "↑" : "↓"}</span>
+            </a>
+          )}
         </nav>
         {this.state.is_context_menu && (
           <ContextMenu right={20} top={30}>
@@ -54,6 +55,7 @@ class Header extends React.Component {
 function mapStateToProps(state, ownProps) {
   return {
     is_loading: state.kanban.is_loading,
+    slug: state.kanban.slug,
     title: state.kanban.title,
     token: state.kanban.token,
     user: state.kanban.user

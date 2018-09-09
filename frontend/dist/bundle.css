@@ -73,6 +73,30 @@
     .ContextMenu_link:last-child {
       margin-bottom: 0; }
 
+.Dashboard {
+  border-right: 2px solid black;
+  height: calc(100vh - 42px);
+  position: relative;
+  width: 300px; }
+  .Dashboard_container {
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    left: 0;
+    overflow-y: auto;
+    padding: 20px;
+    position: absolute;
+    right: 0;
+    top: 40px; }
+  .Dashboard_header {
+    border-bottom: 1px solid black;
+    padding: 10px 20px; }
+  .Dashboard_card {
+    background: white;
+    border: 1px solid black;
+    margin-bottom: 10px;
+    padding: 10px; }
+
 .Header {
   border-bottom: 2px solid black;
   padding: 10px 20px 10px 15px; }

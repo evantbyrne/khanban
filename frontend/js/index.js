@@ -29,7 +29,6 @@ const NotFoundView = ({ match }) => (
 
 const KanbanView = ({ match }) => (
   <div>
-    <Header />
     <Kanban
       card_id={match.params.card_id || null}
       card_revision_id={match.params.card_revision_id || null}
@@ -44,6 +43,7 @@ const app = (
   <Router history={history}>
     <Provider store={store}>
       <React.Fragment>
+        <Header />
         <Switch>
           <Route exact path='/' component={DashboardView}/>
           <Route exact path='/auth/login' component={AuthView}/>

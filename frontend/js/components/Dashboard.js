@@ -15,11 +15,16 @@ class Dashboard extends React.Component {
 
     return (
       <div className="Dashboard">
-        {this.props.projects.map(project => (
-          <div id={`Project_${project.slug}`} key={`Dashboard_project_${project.id}`}>
-            <Link to={`/${project.slug}`}>{project.title}</Link>
-          </div>
-        ))}
+        <div className="Dashboard_header">Projects</div>
+        <div className="Dashboard_container">
+          {this.props.projects.map(project => (
+            <div key={`Dashboard_project_${project.id}`}
+              className="Dashboard_card"
+              id={`Project_${project.slug}`}>
+              <Link to={`/${project.slug}`}>{project.title}</Link>
+            </div>
+          ))}
+        </div>
       </div>
     );
   }
