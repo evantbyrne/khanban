@@ -293,6 +293,31 @@ export default function kanbanReducer(state = initialState, action) {
         });
       })();
 
+    case "PROJECT_CREATE_BEGIN":
+      return (function() {
+        return Object.assign({}, state, {
+          is_loading: true
+        });
+      })();
+
+    case "PROJECT_CREATE_ERROR":
+      return (function() {
+        console.log("ERROR", action.error);
+        return Object.assign({}, state, {
+          error: action.error,
+          is_loading: false
+        });
+      })();
+
+    case "PROJECT_CREATE_SUCCESS":
+      return (function() {
+        const projects = state.projects.concat([action.json]);
+        return Object.assign({}, state, {
+          is_loading: false,
+          projects
+        });
+      })();
+
     case "PROJECT_SLUG":
       return (function() {
         return Object.assign({}, state, {

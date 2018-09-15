@@ -74,10 +74,16 @@
       margin-bottom: 0; }
 
 .Dashboard {
-  border-right: 2px solid black;
-  height: calc(100vh - 42px);
-  position: relative;
-  width: 300px; }
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  overflow-x: auto; }
+  .Dashboard_column {
+    border-right: 2px solid black;
+    height: calc(100vh - 42px);
+    position: relative;
+    max-width: 300px;
+    min-width: 300px; }
   .Dashboard_container {
     bottom: 0;
     display: flex;
@@ -91,6 +97,8 @@
   .Dashboard_header {
     border-bottom: 1px solid black;
     padding: 10px 20px; }
+  .Dashboard_header-add {
+    float: right; }
   .Dashboard_card {
     background: white;
     border: 1px solid black;

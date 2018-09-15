@@ -49,10 +49,46 @@ describe("Kanban", function() {
   });
 
   /**
+   * Create Kanban
+   */
+  it("we should be able to create kanbans", async function() {
+    expect(page.url()).to.be("http://localhost:8000/");
+    await page.waitForSelector(".Dashboard");
+    expect(await page.$$eval(".Dashboard_card", nodes => nodes.length)).to.be(1);
+    expect(await page.$eval(".Dashboard_card:first-child a", node => node.innerText)).to.be("Khanban");
+
+    await page.click(".Dashboard_header-add");
+    await page.waitForSelector(".CardDetail");
+    await page.type('.CardDetail_field[name="title"]', "New Project");
+    await page.click('.CardDetail_button[name="save"]');
+
+    await waitForLoadStart(page);
+    await waitForLoadEnd(page);
+    await page.waitForSelector(".Dashboard");
+    expect(await page.$$eval(".Dashboard_card", nodes => nodes.length)).to.be(2);
+    expect(await page.$eval(".Dashboard_card:first-child a", node => node.innerText)).to.be("Khanban");
+    expect(await page.$eval(".Dashboard_card:last-child a", node => node.innerText)).to.be("New Project");
+  });
+
+  /**
    * View Kanban
    */
   it("we should be able to view kanbans", async function() {
     expect(page.url()).to.be("http://localhost:8000/");
+    await page.waitForSelector("#Project_new-project a");
+    await page.click("#Project_new-project a");
+
+    await waitForLoadStart(page);
+    await waitForLoadEnd(page);
+    await page.waitForSelector(".KanbanColumn");
+    expect(page.url()).to.be("http://localhost:8000/new-project");
+    expect(await page.$$eval(".KanbanColumn", nodes => nodes.length)).to.be(4);
+
+    await page.waitForSelector("#HeaderNav_dashboard");
+    await page.click("#HeaderNav_dashboard");
+
+    await waitForLoadStart(page);
+    await waitForLoadEnd(page);
     await page.waitForSelector("#Project_khanban a");
     await page.click("#Project_khanban a");
     await waitForLoadStart(page);

@@ -179,6 +179,12 @@ class ProjectSerializer(HyperlinkedModelSerializer):
             title=data.get('title'),
         )
         project.save()
+
+        models.KanbanColumn.objects.create(order=1, project=project, title="To Do")
+        models.KanbanColumn.objects.create(order=2, project=project, title="In Progress")
+        models.KanbanColumn.objects.create(order=3, project=project, title="QA")
+        models.KanbanColumn.objects.create(order=4, project=project, title="Accepted")
+
         return project
 
 
