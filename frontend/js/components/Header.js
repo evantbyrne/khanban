@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import ContextMenu from './ContextMenu';
 import ContextMenuLink from './ContextMenuLink';
-import { load } from '../actions/kanbanActions';
+import { load, viewDashboard } from '../actions/kanbanActions';
 
 class Header extends React.Component {
   static getDerivedStateFromProps(props, state) {
@@ -26,6 +26,11 @@ class Header extends React.Component {
     });
   };
 
+  onViewDashboard = (event) => {
+    event.preventDefault();
+    this.props.viewDashboard();
+  }
+
   onLogOut = (event) => {
     event.preventDefault();
     this.props.logOut(this.props.token);
@@ -39,7 +44,7 @@ class Header extends React.Component {
     return (
       <header className="Header">
         <nav className="Header_nav">
-          <Link className="Header_nav-link" id="HeaderNav_dashboard" to="/">Dashboard</Link>
+          <a className="Header_nav-link" href="/" id="HeaderNav_dashboard" onClick={this.onViewDashboard}>Dashboard</a>
           {this.props.title && (
             <React.Fragment>
               / <Link className="Header_nav-link" id="HeaderNav_project" to={`/${this.props.slug}`}>{this.props.title}</Link>
@@ -100,6 +105,10 @@ function mapDispatchToProps(dispatch) {
           "LOAD_KANBAN_ERROR"
         )
       );
+    },
+
+    viewDashboard: function() {
+      dispatch(viewDashboard());
     }
   }
 }

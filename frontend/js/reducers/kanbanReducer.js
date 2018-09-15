@@ -325,6 +325,13 @@ export default function kanbanReducer(state = initialState, action) {
         });
       })();
 
+    case "VIEW_DASHBOARD":
+      return (function() {
+        return Object.assign({}, state, {
+          title: null
+        });
+      })();
+
     case "VIEW_LOGIN":
       return (function() {
         return Object.assign({}, state, {
