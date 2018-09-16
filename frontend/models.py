@@ -49,6 +49,7 @@ class KanbanColumn(models.Model):
 
 
 class Project(models.Model):
+    is_archived = models.BooleanField(blank=True, default=False)
     slug = models.SlugField(blank=True, max_length=255, unique=True)
     title = models.CharField(max_length=255)
 

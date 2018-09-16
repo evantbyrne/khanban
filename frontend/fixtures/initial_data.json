@@ -3,6 +3,7 @@
     "model": "frontend.project",
     "pk": 1,
     "fields": {
+      "is_archived": false,
       "slug": "khanban",
       "title": "Khanban"
     }

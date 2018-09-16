@@ -2,9 +2,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from "react-router-dom";
 import { load } from '../actions/kanbanActions';
+import ContextMenu from './ContextMenu';
+import ContextMenuLink from './ContextMenuLink';
 
 class Dashboard extends React.Component {
   state = {
+    context_menu: null,
     current_project: null,
     title_error: false
   };
@@ -12,6 +15,16 @@ class Dashboard extends React.Component {
   componentDidMount() {
     this.props.load(this.props.token);
   }
+
+  onArchive = (event, project) => {
+    event.preventDefault();
+
+    this.props.onArchive(this.props.token, project)
+
+    this.setState({
+      context_menu: null
+    });
+  };
 
   onCancel = (event) => {
     event.preventDefault();
@@ -29,6 +42,13 @@ class Dashboard extends React.Component {
       current_project,
       title_error: false
     })
+  };
+
+  onContextMenu = (event, project_slug) => {
+    event.preventDefault();
+    this.setState({
+      context_menu: this.state.context_menu === project_slug ? null : project_slug
+    });
   };
 
   onSave = (event) => {
@@ -80,7 +100,19 @@ class Dashboard extends React.Component {
               <div key={`Dashboard_project_${project.id}`}
                 className="Dashboard_card"
                 id={`Project_${project.slug}`}>
-                <Link to={`/${project.slug}`}>{project.title}</Link>
+                <Link className="Dashboard_card-link"
+                  to={`/${project.slug}`}>{project.title}</Link>
+                <a className="Dashboard_card-context-link"
+                  href="#"
+                  id="Dashboard_project-archive"
+                  onClick={e => this.onContextMenu(e, project.slug)}>
+                  {this.state.context_menu === project.slug ? "↑" : "↓"}
+                </a>
+                {this.state.context_menu === project.slug && (
+                  <ContextMenu right={-10} top={30}>
+                    <ContextMenuLink id={`ContextMenu_project-archive_${project.slug}`} onClick={e => this.onArchive(e, project)}>Archive</ContextMenuLink>
+                  </ContextMenu>
+                )}
               </div>
             ))}
           </div>
@@ -124,6 +156,21 @@ function mapDispatchToProps(dispatch) {
           "LOAD_PROJECTS_BEGIN",
           "LOAD_PROJECTS_SUCCESS",
           "LOAD_KANBAN_ERROR"
+        )
+      );
+    },
+
+    onArchive: (token, project) => {
+      project.is_archived = true;
+      dispatch(
+        load(
+          token,
+          'put',
+          `/api/projects/${project.slug}.json`,
+          "PROJECT_ARCHIVE_BEGIN",
+          "PROJECT_ARCHIVE_SUCCESS",
+          "LOAD_KANBAN_ERROR",
+          project
         )
       );
     },

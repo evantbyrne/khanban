@@ -4,6 +4,22 @@
   height: 100%;
   overflow-x: auto;
 
+  &_card {
+    background: white;
+    border: 1px solid black;
+    margin-bottom: 10px;
+    padding: 10px 25px 10px 10px;
+    position: relative;
+  }
+
+  &_card-context-link {
+    color: black;
+    position: absolute;
+    right: 10px;
+    text-decoration: none;
+    top: 9px;
+  }
+
   &_column {
     border-right: 2px solid black;
     height: calc(100vh - 42px);
@@ -31,12 +47,5 @@
 
   &_header-add {
     float: right;
-  }
-
-  &_card {
-    background: white;
-    border: 1px solid black;
-    margin-bottom: 10px;
-    padding: 10px;
   }
 }

@@ -49,9 +49,9 @@ describe("Kanban", function() {
   });
 
   /**
-   * Create Kanban
+   * Create Project
    */
-  it("we should be able to create kanbans", async function() {
+  it("we should be able to create projects", async function() {
     expect(page.url()).to.be("http://localhost:8000/");
     await page.waitForSelector(".Dashboard");
     expect(await page.$$eval(".Dashboard_card", nodes => nodes.length)).to.be(1);
@@ -75,8 +75,8 @@ describe("Kanban", function() {
    */
   it("we should be able to view kanbans", async function() {
     expect(page.url()).to.be("http://localhost:8000/");
-    await page.waitForSelector("#Project_new-project a");
-    await page.click("#Project_new-project a");
+    await page.waitForSelector("#Project_new-project .Dashboard_card-link");
+    await page.click("#Project_new-project .Dashboard_card-link");
 
     await waitForLoadStart(page);
     await waitForLoadEnd(page);
@@ -89,20 +89,51 @@ describe("Kanban", function() {
 
     await waitForLoadStart(page);
     await waitForLoadEnd(page);
-    await page.waitForSelector("#Project_khanban a");
-    await page.click("#Project_khanban a");
+    await page.waitForSelector("#Project_khanban .Dashboard_card-link");
+    await page.click("#Project_khanban .Dashboard_card-link");
     await waitForLoadStart(page);
     await waitForLoadEnd(page);
     expect(page.url()).to.be("http://localhost:8000/khanban");
   });
 
   /**
+   * Archive Project
+   */
+  it("we should be able to archive projects", async function() {
+    expect(page.url()).to.be("http://localhost:8000/khanban");
+    await page.waitForSelector("#HeaderNav_dashboard");
+    await page.click("#HeaderNav_dashboard");
+
+    await waitForLoadStart(page);
+    await waitForLoadEnd(page);
+    await page.waitForSelector("#Project_new-project");
+    expect(page.url()).to.be("http://localhost:8000/");
+    await page.click("#Project_new-project .Dashboard_card-context-link");
+
+    await page.waitForSelector(".ContextMenu");
+    await page.click("#ContextMenu_project-archive_new-project");
+
+    await waitForLoadStart(page);
+    await waitForLoadEnd(page);
+    await page.waitForSelector(".Dashboard");
+    await page.waitForSelector("#Project_new-project", { hidden: true });
+    expect(page.url()).to.be("http://localhost:8000/");
+  });
+
+  /**
    * View Card
    */
   it("we should be able to view cards", async function() {
+    expect(page.url()).to.be("http://localhost:8000/");
+
+    await page.waitForSelector("#Project_khanban .Dashboard_card-link");
+    await page.click("#Project_khanban .Dashboard_card-link");
+
+    await waitForLoadStart(page);
+    await waitForLoadEnd(page);
+    await page.waitForSelector(".KanbanColumn_ticket");
     expect(page.url()).to.be("http://localhost:8000/khanban");
 
-    await page.waitForSelector(".KanbanColumn_ticket");
     expect(await page.$eval("#HeaderNav_user u", node => node.innerText)).to.be("test");
     expect(await page.$eval("#HeaderNav_project", node => node.innerText)).to.be("Khanban");
     expect(await page.$$eval(".KanbanColumn_ticket", nodes => nodes.length)).to.be(1);

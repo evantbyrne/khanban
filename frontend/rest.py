@@ -164,6 +164,7 @@ class ProjectSerializer(HyperlinkedModelSerializer):
     class Meta:
         fields = (
             'id',
+            'is_archived',
             'slug',
             'title',
         )
@@ -176,6 +177,7 @@ class ProjectSerializer(HyperlinkedModelSerializer):
 
     def create(self, data):
         project = models.Project(
+            is_archived=False,
             title=data.get('title'),
         )
         project.save()
@@ -185,6 +187,12 @@ class ProjectSerializer(HyperlinkedModelSerializer):
         models.KanbanColumn.objects.create(order=3, project=project, title="QA")
         models.KanbanColumn.objects.create(order=4, project=project, title="Accepted")
 
+        return project
+
+    def update(self, project, data):
+        project.is_archived = data.get('is_archived');
+        project.title = data.get('title');
+        project.save()
         return project
 
 
@@ -238,7 +246,7 @@ class KanbanColumnViewSet(ModelViewSet):
 
 class ProjectViewSet(ModelViewSet):
     lookup_field = 'slug'
-    queryset = models.Project.objects.all()
+    queryset = models.Project.objects.filter(is_archived=False)
     serializer_class = ProjectSerializer
 
 

@@ -66,7 +66,8 @@
   border: 2px solid black;
   padding: 10px;
   position: absolute;
-  width: 150px; }
+  width: 150px;
+  z-index: 2; }
   .ContextMenu_link {
     display: block;
     margin-bottom: 5px; }
@@ -78,6 +79,18 @@
   flex-direction: row;
   height: 100%;
   overflow-x: auto; }
+  .Dashboard_card {
+    background: white;
+    border: 1px solid black;
+    margin-bottom: 10px;
+    padding: 10px 25px 10px 10px;
+    position: relative; }
+  .Dashboard_card-context-link {
+    color: black;
+    position: absolute;
+    right: 10px;
+    text-decoration: none;
+    top: 9px; }
   .Dashboard_column {
     border-right: 2px solid black;
     height: calc(100vh - 42px);
@@ -99,11 +112,6 @@
     padding: 10px 20px; }
   .Dashboard_header-add {
     float: right; }
-  .Dashboard_card {
-    background: white;
-    border: 1px solid black;
-    margin-bottom: 10px;
-    padding: 10px; }
 
 .Header {
   border-bottom: 2px solid black;

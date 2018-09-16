@@ -52,6 +52,7 @@ class Migration(migrations.Migration):
             name='Project',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('is_archived', models.BooleanField(blank=True, default=False)),
                 ('slug', models.SlugField(blank=True, max_length=255, unique=True)),
                 ('title', models.CharField(max_length=255)),
             ],
