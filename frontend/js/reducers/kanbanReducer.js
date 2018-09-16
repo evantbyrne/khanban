@@ -343,6 +343,27 @@ export default function kanbanReducer(state = initialState, action) {
         });
       })();
 
+    case "PROJECT_UPDATE_BEGIN":
+      return (function() {
+        return Object.assign({}, state, {
+          is_loading: true
+        });
+      })();
+
+    case "PROJECT_UPDATE_SUCCESS":
+      return (function() {
+        const projects = state.projects.map(project => {
+          if (project.slug === action.json.slug) {
+            return action.json;
+          }
+          return project;
+        });
+        return Object.assign({}, state, {
+          is_loading: false,
+          projects
+        });
+      })();
+
     case "VIEW_DASHBOARD":
       return (function() {
         return Object.assign({}, state, {

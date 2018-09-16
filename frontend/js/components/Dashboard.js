@@ -51,17 +51,31 @@ class Dashboard extends React.Component {
     });
   };
 
+  onEdit = (event, current_project) => {
+    event.preventDefault();
+    this.setState({
+      context_menu: null,
+      current_project
+    });
+  };
+
   onSave = (event) => {
     event.preventDefault();
 
-    if (!this.state.current_project || !this.state.current_project.title) {
+    const project = this.state.current_project;
+
+    if (!project || !project.title) {
       this.setState({
         title_error: true
       });
       return;
     }
 
-    this.props.onCreate(this.props.token, this.state.current_project);
+    if (project.slug === null) {
+      this.props.onCreate(this.props.token, project);
+    } else {
+      this.props.onUpdate(this.props.token, project);
+    }
 
     this.setState({
       current_project: null
@@ -110,6 +124,7 @@ class Dashboard extends React.Component {
                 </a>
                 {this.state.context_menu === project.slug && (
                   <ContextMenu right={-10} top={30}>
+                    <ContextMenuLink id={`ContextMenu_project-edit_${project.slug}`} onClick={e => this.onEdit(e, project)}>Edit</ContextMenuLink>
                     <ContextMenuLink id={`ContextMenu_project-archive_${project.slug}`} onClick={e => this.onArchive(e, project)}>Archive</ContextMenuLink>
                   </ContextMenu>
                 )}
@@ -184,6 +199,20 @@ function mapDispatchToProps(dispatch) {
           "PROJECT_CREATE_BEGIN",
           "PROJECT_CREATE_SUCCESS",
           "PROJECT_CREATE_ERROR",
+          project
+        )
+      );
+    },
+
+    onUpdate: (token, project) => {
+      dispatch(
+        load(
+          token,
+          'put',
+          `/api/projects/${project.slug}.json`,
+          "PROJECT_UPDATE_BEGIN",
+          "PROJECT_UPDATE_SUCCESS",
+          "LOAD_KANBAN_ERROR",
           project
         )
       );
