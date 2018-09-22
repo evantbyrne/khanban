@@ -11,7 +11,7 @@ class Loading extends React.Component {
 
 function mapStateToProps(state, ownProps) {
   return {
-    is_loading: state.kanban.is_loading
+    is_loading: state.kanban.loading_count > 0
   };
 }
 

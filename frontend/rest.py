@@ -209,10 +209,12 @@ class UserSerializer(HyperlinkedModelSerializer):
         fields = (
             'email',
             'id',
+            'is_staff',
             'username',
         )
         read_only_fields = (
             'id',
+            'is_staff',
             'username',
         ),
 
@@ -257,6 +259,11 @@ class ProjectViewSet(ModelViewSet):
     serializer_class = ProjectSerializer
 
 
+class UserViewSet(ModelViewSet):
+    queryset = User.objects.filter(is_active=True).order_by('username')
+    serializer_class = UserSerializer
+
+
 class AuthUserView(APIView):
     def get(self, request, format=None):
         if not request.user:
@@ -275,3 +282,4 @@ router.register(r'cards', CardViewSet)
 router.register(r'kanbans', KanbanViewSet)
 router.register(r'kanban_columns', KanbanColumnViewSet)
 router.register(r'projects', ProjectViewSet)
+router.register(r'users', UserViewSet)

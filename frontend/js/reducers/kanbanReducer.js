@@ -5,14 +5,15 @@ const initialState = {
   current_card_revision: null,
   error: null,
   id: 1,
-  is_loading: true,
   is_detail_saving: false,
   kanban_columns: [],
+  loading_count : 0,
   projects: [],
   slug: null,
   title: null,
   token: Cookies.get("token", null),
-  user: null
+  user: null,
+  users: []
 };
 
 export default function kanbanReducer(state = initialState, action) {
@@ -56,8 +57,8 @@ export default function kanbanReducer(state = initialState, action) {
           current_card: null,
           current_card_revision: null,
           is_detail_saving: false,
-          is_loading: false,
-          kanban_columns
+          kanban_columns,
+          loading_count: state.loading_count - 1
         });
       })();
 
@@ -93,8 +94,8 @@ export default function kanbanReducer(state = initialState, action) {
     case "CARD_CREATE_BEGIN":
       return (function() {
         return Object.assign({}, state, {
-          is_loading: true,
-          is_detail_saving: true
+          is_detail_saving: true,
+          loading_count: state.loading_count + 1
         });
       })();
 
@@ -104,7 +105,7 @@ export default function kanbanReducer(state = initialState, action) {
         return Object.assign({}, state, {
           error: action.error,
           is_detail_saving: false,
-          is_loading: false
+          loading_count: state.loading_count - 1
         });
       })();
 
@@ -122,8 +123,8 @@ export default function kanbanReducer(state = initialState, action) {
         return Object.assign({}, state, {
           current_card: null,
           is_detail_saving: false,
-          is_loading: false,
-          kanban_columns
+          kanban_columns,
+          loading_count: state.loading_count - 1
         });
       })();
 
@@ -152,7 +153,7 @@ export default function kanbanReducer(state = initialState, action) {
       return (function() {
         return Object.assign({}, state, {
           is_detail_saving: true,
-          is_loading: true
+          loading_count: state.loading_count + 1
         });
       })();
 
@@ -162,7 +163,7 @@ export default function kanbanReducer(state = initialState, action) {
         return Object.assign({}, state, {
           error: action.error,
           is_detail_saving: false,
-          is_loading: false
+          loading_count: state.loading_count - 1
         });
       })();
 
@@ -183,22 +184,22 @@ export default function kanbanReducer(state = initialState, action) {
         return Object.assign({}, state, {
           current_card: state.current_card ? current_card : null,
           is_detail_saving: false,
-          is_loading: false,
-          kanban_columns
+          kanban_columns,
+          loading_count: state.loading_count - 1
         });
       })();
 
     case "IS_LOADING":
       return (function() {
         return Object.assign({}, state, {
-          is_loading: action.is_loading
+          loading_count: state.loading_count + (action.is_loading ? 1 : -1)
         });
       })();
 
     case "LOAD_KANBAN_BEGIN":
       return (function() {
         return Object.assign({}, state, {
-          is_loading: true
+          loading_count: state.loading_count + 1
         });
       })();
 
@@ -208,15 +209,15 @@ export default function kanbanReducer(state = initialState, action) {
         console.log("ERROR", action.error);
         return Object.assign({}, state, {
           error: action.error,
-          is_loading: false
+          loading_count: state.loading_count - 1
         });
       })();
 
     case "LOAD_KANBAN_SUCCESS":
       return (function() {
         return Object.assign({}, state, {
-          is_loading: false,
           kanban_columns: action.json.kanban_columns,
+          loading_count: state.loading_count - 1,
           title: action.json.title,
           user: action.json.user
         });
@@ -225,7 +226,7 @@ export default function kanbanReducer(state = initialState, action) {
     case "LOAD_PROJECTS_BEGIN":
       return (function() {
         return Object.assign({}, state, {
-          is_loading: true,
+          loading_count: state.loading_count + 1,
           projects: []
         });
       })();
@@ -233,7 +234,7 @@ export default function kanbanReducer(state = initialState, action) {
     case "LOAD_PROJECTS_SUCCESS":
       return (function() {
         return Object.assign({}, state, {
-          is_loading: false,
+          loading_count: state.loading_count - 1,
           projects: action.json
         });
       })();
@@ -241,7 +242,7 @@ export default function kanbanReducer(state = initialState, action) {
     case "LOAD_USER_BEGIN":
       return (function() {
         return Object.assign({}, state, {
-          is_loading: true,
+          loading_count: state.loading_count + 1,
           user: null
         });
       })();
@@ -249,15 +250,31 @@ export default function kanbanReducer(state = initialState, action) {
     case "LOAD_USER_SUCCESS":
       return (function() {
         return Object.assign({}, state, {
-          is_loading: false,
+          loading_count: state.loading_count - 1,
           user: action.json
+        });
+      })();
+
+    case "LOAD_USERS_BEGIN":
+      return (function() {
+        return Object.assign({}, state, {
+          loading_count: state.loading_count + 1,
+          users: []
+        });
+      })();
+
+    case "LOAD_USERS_SUCCESS":
+      return (function() {
+        return Object.assign({}, state, {
+          loading_count: state.loading_count - 1,
+          users: action.json
         });
       })();
 
     case "LOGIN_BEGIN":
       return (function() {
         return Object.assign({}, state, {
-          is_loading: true
+          loading_count: state.loading_count + 1
         });
       })();
 
@@ -273,7 +290,7 @@ export default function kanbanReducer(state = initialState, action) {
         console.log("ERROR", action.error);
         return Object.assign({}, state, {
           error,
-          is_loading: false
+          loading_count: state.loading_count - 1
         });
       })();
 
@@ -281,7 +298,7 @@ export default function kanbanReducer(state = initialState, action) {
       return (function() {
         Cookies.set("token", action.json.token);
         return Object.assign({}, state, {
-          is_loading: false,
+          loading_count: state.loading_count - 1,
           token: action.json.token
         });
       })();
@@ -295,14 +312,14 @@ export default function kanbanReducer(state = initialState, action) {
     case "ORDER_KANBAN_SUCCESS":
       return (function() {
         return Object.assign({}, state, {
-          is_loading: false
+          loading_count: state.loading_count - 1
         });
       })();
 
     case "PROJECT_ARCHIVE_BEGIN":
       return (function() {
         return Object.assign({}, state, {
-          is_loading: true
+          loading_count: state.loading_count + 1
         });
       })();
 
@@ -312,7 +329,7 @@ export default function kanbanReducer(state = initialState, action) {
           return project.slug !== action.json.slug;
         });
         return Object.assign({}, state, {
-          is_loading: false,
+          loading_count: state.loading_count - 1,
           projects
         });
       })();
@@ -320,7 +337,7 @@ export default function kanbanReducer(state = initialState, action) {
     case "PROJECT_CREATE_BEGIN":
       return (function() {
         return Object.assign({}, state, {
-          is_loading: true
+          loading_count: state.loading_count + 1
         });
       })();
 
@@ -329,7 +346,7 @@ export default function kanbanReducer(state = initialState, action) {
         console.log("ERROR", action.error);
         return Object.assign({}, state, {
           error: action.error,
-          is_loading: false
+          loading_count: state.loading_count - 1
         });
       })();
 
@@ -337,7 +354,7 @@ export default function kanbanReducer(state = initialState, action) {
       return (function() {
         const projects = state.projects.concat([action.json]);
         return Object.assign({}, state, {
-          is_loading: false,
+          loading_count: state.loading_count - 1,
           projects
         });
       })();
@@ -352,7 +369,7 @@ export default function kanbanReducer(state = initialState, action) {
     case "PROJECT_UPDATE_BEGIN":
       return (function() {
         return Object.assign({}, state, {
-          is_loading: true
+          loading_count: state.loading_count + 1
         });
       })();
 
@@ -365,7 +382,7 @@ export default function kanbanReducer(state = initialState, action) {
           return project;
         });
         return Object.assign({}, state, {
-          is_loading: false,
+          loading_count: state.loading_count - 1,
           projects
         });
       })();
@@ -380,6 +397,7 @@ export default function kanbanReducer(state = initialState, action) {
     case "VIEW_LOGIN":
       return (function() {
         return Object.assign({}, state, {
+          loading_count: 0,
           token: null
         });
       })();

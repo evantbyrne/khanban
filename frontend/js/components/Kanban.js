@@ -68,7 +68,7 @@ function mapStateToProps(state, ownProps) {
     columns: state.kanban.kanban_columns,
     current_card: state.kanban.current_card,
     current_card_revision: state.kanban.current_card_revision,
-    is_loading: state.kanban.is_loading,
+    is_loading: state.kanban.loading_count > 0,
     token: state.kanban.token
   };
 }

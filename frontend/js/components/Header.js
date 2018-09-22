@@ -71,7 +71,7 @@ class Header extends React.Component {
 
 function mapStateToProps(state, ownProps) {
   return {
-    is_loading: state.kanban.is_loading,
+    is_loading: state.kanban.loading_count > 0,
     slug: state.kanban.slug,
     title: state.kanban.title,
     token: state.kanban.token,

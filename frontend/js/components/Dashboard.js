@@ -101,7 +101,7 @@ class Dashboard extends React.Component {
 
     return (
       <div className="Dashboard">
-        <div className="Dashboard_column">
+        <div className="Dashboard_column" id="Dashboard_projects">
           <div className="Dashboard_header">
             Projects
             <a
@@ -132,6 +132,23 @@ class Dashboard extends React.Component {
             ))}
           </div>
         </div>
+        <div className="Dashboard_column" id="Dashboard_users">
+          <div className="Dashboard_header">
+            Users
+          </div>
+          <div className="Dashboard_container">
+            {this.props.users.map(user => (
+              <div key={`Dashboard_user_${user.id}`}
+                className="Dashboard_card"
+                id={`User_${user.username}`}>
+                <React.Fragment>{user.username}</React.Fragment>
+                {user.is_staff && (
+                  <React.Fragment> (admin)</React.Fragment>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
         {this.state.current_project && (
           <form className="CardDetail" onSubmit={this.onSave}>
             <input className={`CardDetail_field ${this.state.title_error ? '-error' : ''}`}
@@ -154,9 +171,10 @@ class Dashboard extends React.Component {
 
 function mapStateToProps(state, ownProps) {
   return {
-    is_loading: state.kanban.is_loading,
+    is_loading: state.kanban.loading_count > 0,
     projects: state.kanban.projects,
-    token: state.kanban.token
+    token: state.kanban.token,
+    users: state.kanban.users
   };
 }
 
@@ -170,6 +188,16 @@ function mapDispatchToProps(dispatch) {
           `/api/projects.json`,
           "LOAD_PROJECTS_BEGIN",
           "LOAD_PROJECTS_SUCCESS",
+          "LOAD_KANBAN_ERROR"
+        )
+      );
+      dispatch(
+        load(
+          token,
+          'get',
+          `/api/users.json`,
+          "LOAD_USERS_BEGIN",
+          "LOAD_USERS_SUCCESS",
           "LOAD_KANBAN_ERROR"
         )
       );

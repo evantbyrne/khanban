@@ -49,15 +49,25 @@ describe("Kanban", function() {
   });
 
   /**
+   * View Users
+   */
+  it("we should be able to view users", async function() {
+    expect(page.url()).to.be("http://localhost:8000/");
+    await page.waitForSelector("#Dashboard_users");
+    expect(await page.$$eval("#Dashboard_users .Dashboard_card", nodes => nodes.length)).to.be(1);
+    expect(await page.$eval("#Dashboard_users .Dashboard_card:first-child", node => node.innerText)).to.be("test (admin)");
+  });
+
+  /**
    * Create Project
    */
   it("we should be able to create projects", async function() {
     expect(page.url()).to.be("http://localhost:8000/");
     await page.waitForSelector(".Dashboard");
-    expect(await page.$$eval(".Dashboard_card", nodes => nodes.length)).to.be(1);
-    expect(await page.$eval(".Dashboard_card:first-child a", node => node.innerText)).to.be("Khanban");
+    expect(await page.$$eval("#Dashboard_projects .Dashboard_card", nodes => nodes.length)).to.be(1);
+    expect(await page.$eval("#Dashboard_projects .Dashboard_card:first-child a", node => node.innerText)).to.be("Khanban");
 
-    await page.click(".Dashboard_header-add");
+    await page.click("#Dashboard_projects .Dashboard_header-add");
     await page.waitForSelector(".CardDetail");
     await page.type('.CardDetail_field[name="title"]', "New Project");
     await page.click('.CardDetail_button[name="save"]');
@@ -65,9 +75,9 @@ describe("Kanban", function() {
     await waitForLoadStart(page);
     await waitForLoadEnd(page);
     await page.waitForSelector(".Dashboard");
-    expect(await page.$$eval(".Dashboard_card", nodes => nodes.length)).to.be(2);
-    expect(await page.$eval(".Dashboard_card:first-child a", node => node.innerText)).to.be("Khanban");
-    expect(await page.$eval(".Dashboard_card:last-child a", node => node.innerText)).to.be("New Project");
+    expect(await page.$$eval("#Dashboard_projects .Dashboard_card", nodes => nodes.length)).to.be(2);
+    expect(await page.$eval("#Dashboard_projects .Dashboard_card:first-child a", node => node.innerText)).to.be("Khanban");
+    expect(await page.$eval("#Dashboard_projects .Dashboard_card:last-child a", node => node.innerText)).to.be("New Project");
   });
 
   /**
