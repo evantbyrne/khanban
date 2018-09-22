@@ -12,6 +12,10 @@ from . import models
 
 class CardRevisionSerializer(HyperlinkedModelSerializer):
     card = PrimaryKeyRelatedField(queryset=models.Card.objects.all())
+    user = SerializerMethodField()
+
+    def get_user(self, revision):
+        return UserSerializer(instance=revision.user).data
 
     class Meta:
         model = models.CardRevision
@@ -22,9 +26,11 @@ class CardRevisionSerializer(HyperlinkedModelSerializer):
             'id',
             'is_archived',
             'title',
+            'user',
         )
         read_only_fields = (
             'id',
+            'user',
         )
 
 
@@ -69,6 +75,7 @@ class CardSerializer(HyperlinkedModelSerializer):
         revision.description = data.get('description', '')
         revision.is_archived = card.is_archived
         revision.title = data.get('title')
+        revision.user = self.context['request'].user
         revision.save()
 
     def update(self, card, data):

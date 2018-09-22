@@ -24,7 +24,10 @@ export default function kanbanReducer(state = initialState, action) {
             card_revisions: [
               {
                 description: '',
-                title: ''
+                title: '',
+                user: {
+                  username: ''
+                }
               }
             ],
             id: null,
@@ -32,7 +35,10 @@ export default function kanbanReducer(state = initialState, action) {
           },
           current_card_revision: {
             description: '',
-            title: ''
+            title: '',
+            user: {
+              username: ''
+            }
           }
         });
       })();

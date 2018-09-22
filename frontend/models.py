@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 from uuslug import uuslug
 
@@ -29,6 +30,7 @@ class CardRevision(models.Model):
     description = models.TextField(blank=True, default="")
     is_archived = models.BooleanField(blank=True, default=False)
     title = models.CharField(max_length=255)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     class Meta:
         ordering = ['-id']

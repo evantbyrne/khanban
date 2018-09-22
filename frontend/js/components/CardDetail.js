@@ -115,7 +115,7 @@ class CardDetail extends React.Component {
                 {card.card_revisions.map(revision => (
                   <option
                     key={revision.id}
-                    value={revision.id}>{revision.created_at}</option>
+                    value={revision.id}>{revision.created_at} by {revision.user.username}</option>
                 ))}
               </select>
             </label>
