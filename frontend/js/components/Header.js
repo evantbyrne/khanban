@@ -88,8 +88,7 @@ function mapDispatchToProps(dispatch) {
           "get",
           "/auth/user/?format=json",
           "LOAD_USER_BEGIN",
-          "LOAD_USER_SUCCESS",
-          "LOAD_KANBAN_ERROR"
+          "LOAD_USER_SUCCESS"
         )
       );
     },
@@ -101,8 +100,7 @@ function mapDispatchToProps(dispatch) {
           "get",
           "/auth/logout/?format=json",
           "LOGOUT_BEGIN",
-          "LOGOUT_SUCCESS",
-          "LOAD_KANBAN_ERROR"
+          "LOGOUT_SUCCESS"
         )
       );
     },

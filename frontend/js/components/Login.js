@@ -83,9 +83,9 @@ function mapDispatchToProps(dispatch) {
           null,
           'post',
           `/api/token/`,
-          "LOGIN_BEGIN",
+          null,
           "LOGIN_SUCCESS",
-          "LOGIN_ERROR",
+          null,
           data
         )
       );

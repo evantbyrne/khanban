@@ -187,8 +187,7 @@ function mapDispatchToProps(dispatch) {
           'get',
           `/api/projects.json`,
           "LOAD_PROJECTS_BEGIN",
-          "LOAD_PROJECTS_SUCCESS",
-          "LOAD_KANBAN_ERROR"
+          "LOAD_PROJECTS_SUCCESS"
         )
       );
       dispatch(
@@ -197,8 +196,7 @@ function mapDispatchToProps(dispatch) {
           'get',
           `/api/users.json`,
           "LOAD_USERS_BEGIN",
-          "LOAD_USERS_SUCCESS",
-          "LOAD_KANBAN_ERROR"
+          "LOAD_USERS_SUCCESS"
         )
       );
     },
@@ -210,9 +208,9 @@ function mapDispatchToProps(dispatch) {
           token,
           'put',
           `/api/projects/${project.slug}.json`,
-          "PROJECT_ARCHIVE_BEGIN",
+          null,
           "PROJECT_ARCHIVE_SUCCESS",
-          "LOAD_KANBAN_ERROR",
+          null,
           project
         )
       );
@@ -224,9 +222,9 @@ function mapDispatchToProps(dispatch) {
           token,
           'post',
           `/api/projects.json`,
-          "PROJECT_CREATE_BEGIN",
+          null,
           "PROJECT_CREATE_SUCCESS",
-          "PROJECT_CREATE_ERROR",
+          null,
           project
         )
       );
@@ -238,9 +236,9 @@ function mapDispatchToProps(dispatch) {
           token,
           'put',
           `/api/projects/${project.slug}.json`,
-          "PROJECT_UPDATE_BEGIN",
+          null,
           "PROJECT_UPDATE_SUCCESS",
-          "LOAD_KANBAN_ERROR",
+          null,
           project
         )
       );

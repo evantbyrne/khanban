@@ -43,28 +43,41 @@ export function isLoading(is_loading) {
   };
 };
 
-export function load(token, method, url, type_begin, type_success, type_error, data = {}) {
+export function load(token, method, url, type_begin = null, type_success = null, type_error = null, data = {}) {
   let params = {
     data,
     method,
     url,
   };
+
   if (token) {
     params.headers = {
       Authorization: `Token ${token}`
     };
   }
+
   return dispatch => {
-    dispatch(loadBegin(type_begin));
+    dispatch(loadBegin('AJAX_BEGIN'));
+    if (type_begin) {
+      dispatch(loadBegin(type_begin));
+    }
+
     return axios(params)
       .then(response => {
-        return dispatch(loadSuccess(type_success, response.data));
+        dispatch(loadBegin('AJAX_END'));
+        if (type_success) {
+          dispatch(loadSuccess(type_success, response.data));
+        }
       })
       .catch(error => {
         if (error.response.status === 401) {
+          dispatch(loadBegin('AJAX_END'));
           return dispatch(viewLogin());
         }
-        return dispatch(loadError(type_error, error));
+        dispatch(loadError('AJAX_ERROR', error));
+        if (type_error) {
+          dispatch(loadError(type_error, error));
+        }
       });
   };
 }

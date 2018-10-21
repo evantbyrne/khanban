@@ -82,9 +82,8 @@ function mapDispatchToProps(dispatch) {
           token,
           'get',
           `/api/kanbans/${slug}.json`,
-          "LOAD_KANBAN_BEGIN",
-          "LOAD_KANBAN_SUCCESS",
-          "LOAD_KANBAN_ERROR"
+          null,
+          "LOAD_KANBAN_SUCCESS"
         )
       );
     },
@@ -111,9 +110,9 @@ function mapDispatchToProps(dispatch) {
           token,
           'put',
           `/api/kanbans/${slug}/order.json`,
-          "LOAD_KANBAN_BEGIN",
-          "ORDER_KANBAN_SUCCESS",
-          "LOAD_KANBAN_ERROR",
+          null,
+          null,
+          null,
           data
         )
       );
